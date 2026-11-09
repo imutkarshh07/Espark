@@ -1,0 +1,1572 @@
+{
+  "attempts": [
+    {
+      "id": "att-1790434473391",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "test_id": "test-1790434472841",
+      "score": 67,
+      "started_at": "2026-09-26T14:54:33.391Z",
+      "tests": {
+        "id": "test-1790434472841",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "title": "NEET Practice: Physics — Current Electricity (3 Qs • 5m • MEDIUM)",
+        "subject": "Physics",
+        "chapter": "Current Electricity",
+        "exam": "NEET",
+        "total_questions": 3,
+        "created_at": "2026-09-26T14:54:32.844Z",
+        "questions": [
+          {
+            "id": "q-1790434472844-0",
+            "question_text": "Two cells of emf 10 V and 4 V, having internal resistances of 2 Ω and 1 Ω respectively, are connected in parallel with their positive terminals connected together and their negative terminals connected together. This parallel combination is then connected across an external resistance of 4/3 Ω. What is the electric current flowing through the external resistance?",
+            "options": [
+              "3.0 A",
+              "4.5 A",
+              "2.0 A",
+              "1.5 A"
+            ],
+            "correct_answer": "3.0 A",
+            "explanation": "When two cells of emf $E_1, E_2$ and internal resistances $r_1, r_2$ are connected in parallel with like polarities joined together, their equivalent emf ($E_{eq}$) and equivalent internal resistance ($r_{eq}$) are given by:\n\n$$E_{eq} = \\frac{\\frac{E_1}{r_1} + \\frac{E_2}{r_2}}{\\frac{1}{r_1} + \\frac{1}{r_2}}$$\n\n$$r_{eq} = \\frac{r_1 r_2}{r_1 + r_2}$$\n\nGiven:\n$E_1 = 10\\text{ V}$, $r_1 = 2\\ \\Omega$\n$E_2 = 4\\text{ V}$, $r_2 = 1\\ \\Omega$\n\nCalculating $E_{eq}$:\n$$E_{eq} = \\frac{\\frac{10}{2} + \\frac{4}{1}}{\\frac{1}{2} + \\frac{1}{1}} = \\frac{5 + 4}{1.5} = \\frac{9}{1.5} = 6\\text{ V}$$\n\nCalculating $r_{eq}$:\n$$r_{eq} = \\frac{2 \\times 1}{2 + 1} = \\frac{2}{3}\\ \\Omega$$\n\nNow, this equivalent cell is connected across an external resistance $R = \\frac{4}{3}\\ \\Omega$. The current $I$ through the external resistance is:\n\n$$I = \\frac{E_{eq}}{R + r_{eq}} = \\frac{6}{\\frac{4}{3} + \\frac{2}{3}} = \\frac{6}{\\frac{6}{3}} = \\frac{6}{2} = 3.0\\text{ A}$$\n\nHence, the current flowing through the external resistor is 3.0 A.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790434472844-1",
+            "question_text": "The resistance of a metallic conductor is found to be 5.0 Ω at 20 °C and 6.0 Ω at 120 °C. Assuming a linear temperature dependence of resistance, at what temperature will its resistance become 8.0 Ω?",
+            "options": [
+              "340 °C",
+              "420 °C",
+              "220 °C",
+              "320 °C"
+            ],
+            "correct_answer": "320 °C",
+            "explanation": "The variation of resistance with temperature is given by the relation:\n$$R_2 = R_1 [1 + \\alpha (T_2 - T_1)]$$\nor\n$$\\alpha = \\frac{R_2 - R_1}{R_1 (T_2 - T_1)}$$\n\nGiven:\n$R_1 = 5.0\\ \\Omega$ at $T_1 = 20\\ ^\\circ\\text{C}$\n$R_2 = 6.0\\ \\Omega$ at $T_2 = 120\\ ^\\circ\\text{C}$\n\nSubstitute these values to find the temperature coefficient of resistance $\\alpha$:\n$$\\alpha = \\frac{6.0 - 5.0}{5.0 \\times (120 - 20)} = \\frac{1.0}{5.0 \\times 100} = \\frac{1}{500}\\ ^\\circ\\text{C}^{-1} = 2.0 \\times 10^{-3}\\ ^\\circ\\text{C}^{-1}$$\n\nLet $T$ be the temperature at which the resistance becomes $R_3 = 8.0\\ \\Omega$:\n$$R_3 - R_1 = R_1 \\alpha (T - T_1)$$\n$$8.0 - 5.0 = 5.0 \\times \\left(\\frac{1}{500}\\right) \\times (T - 20)$$\n$$3.0 = \\frac{1}{100} \\times (T - 20)$$\n$$T - 20 = 300$$\n$$T = 320\\ ^\\circ\\text{C}$$\n\nThus, the temperature at which the resistance is 8.0 Ω is 320 °C.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790434472844-2",
+            "question_text": "In a meter bridge experiment, a balance point is obtained at a distance of 40 cm from the left end when a standard resistance of 3 Ω is introduced in the left gap and an unknown resistance S is in the right gap. When a resistor of resistance X is connected in parallel with S, the balance point shifts to 50 cm from the left end. What is the value of X?",
+            "options": [
+              "12.0 Ω",
+              "4.5 Ω",
+              "6.0 Ω",
+              "9.0 Ω"
+            ],
+            "correct_answer": "9.0 Ω",
+            "explanation": "The condition for balance in a meter bridge is:\n$$\\frac{R}{S} = \\frac{l}{100 - l}$$\nwhere $l$ is the balancing length measured from the zero end (left end).\n\nStep 1: Finding the initial unknown resistance $S$.\nGiven $R = 3\\ \\Omega$ and $l = 40\\text{ cm}$:\n$$\\frac{3}{S} = \\frac{40}{100 - 40} = \\frac{40}{60} = \\frac{2}{3}$$\n$$S = \\frac{3 \\times 3}{2} = 4.5\\ \\Omega$$\n\nStep 2: When resistance $X$ is connected in parallel with $S$, the effective resistance in the right gap becomes:\n$$S' = \\frac{S \\times X}{S + X}$$\n\nThe new balance point is at $l' = 50\\text{ cm}$. Therefore:\n$$\\frac{R}{S'} = \\frac{l'}{100 - l'} = \\frac{50}{50} = 1$$\n$$S' = R = 3\\ \\Omega$$\n\nStep 3: Calculating $X$:\n$$\\frac{S \\times X}{S + X} = 3$$\nSubstitute $S = 4.5\\ \\Omega$:\n$$\\frac{4.5 X}{4.5 + X} = 3$$\n$$4.5 X = 3(4.5 + X)$$\n$$4.5 X = 13.5 + 3 X$$\n$$1.5 X = 13.5$$\n$$X = \\frac{13.5}{1.5} = 9.0\\ \\Omega$$\n\nTherefore, the value of resistance $X$ is 9.0 Ω.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          }
+        ],
+        "duration_minutes": 5,
+        "durationMinutes": 5,
+        "difficulty": "medium",
+        "subtopic": null,
+        "subjects": [
+          "Physics"
+        ]
+      },
+      "answers": [
+        {
+          "id": "ans-1790434474651-rsc7h",
+          "attempt_id": "att-1790434473391",
+          "question_id": "q-1790434472844-0",
+          "selected_answer": "3.0 A",
+          "is_correct": true,
+          "time_taken": 30
+        },
+        {
+          "id": "ans-1790434475192-xvbn5",
+          "attempt_id": "att-1790434473391",
+          "question_id": "q-1790434472844-1",
+          "selected_answer": "340 °C",
+          "is_correct": false,
+          "time_taken": 45
+        },
+        {
+          "id": "ans-1790434475470-oyy3x",
+          "attempt_id": "att-1790434473391",
+          "question_id": "q-1790434472844-2",
+          "selected_answer": "9.0 Ω",
+          "is_correct": true,
+          "time_taken": 25
+        }
+      ],
+      "completed_at": "2026-09-26T14:54:35.724Z"
+    },
+    {
+      "id": "att-1790358302257",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "test_id": "test-1790358301087",
+      "score": 33,
+      "started_at": "2026-09-25T17:45:02.257Z",
+      "tests": {
+        "id": "test-1790358301087",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "title": "NEET Practice: Physics — Principles of Inheritance and Variation (3 Qs • 5m • MEDIUM)",
+        "subject": "Physics",
+        "chapter": "Principles of Inheritance and Variation",
+        "exam": "NEET",
+        "total_questions": 3,
+        "created_at": "2026-09-25T17:45:01.089Z",
+        "questions": [
+          {
+            "id": "q-1790358301089-0",
+            "question_text": "A copper wire of cross-sectional area A carries a steady current I. If the number density of free electrons is n and the drift velocity is v_d, what will be the new drift velocity if the radius of the wire is doubled while keeping the current I constant?",
+            "options": [
+              "It remains the same",
+              "It becomes double",
+              "It becomes one-fourth",
+              "It becomes half"
+            ],
+            "correct_answer": "It becomes one-fourth",
+            "explanation": "According to the relation between current and drift velocity, I = n e A v_d, where A is the cross-sectional area. For a circular wire, A = πr². Therefore, I = n e (πr²) v_d. If the current I, charge e, and electron density n remain constant, v_d is inversely proportional to the square of the radius (v_d ∝ 1/r²). When the radius r is doubled (2r), the area becomes 4 times the original area (π(2r)² = 4πr²). To keep the current constant, the drift velocity must decrease by a factor of 4. Thus, the new drift velocity is v_d/4.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790358301089-1",
+            "question_text": "The resistance of a platinum wire is 5.000 Ω at 0°C and 5.230 Ω at 100°C. When the wire is inserted in a hot bath, the resistance is measured to be 5.795 Ω. Calculate the temperature of the bath using the linear relationship for resistance.",
+            "options": [
+              "380.15°C",
+              "410.50°C",
+              "320.20°C",
+              "345.65°C"
+            ],
+            "correct_answer": "345.65°C",
+            "explanation": "The variation of resistance with temperature is given by R_t = R_0(1 + αt). For 100°C, R_100 = R_0(1 + α(100)), which gives α = (R_100 - R_0) / (100 * R_0). For the unknown temperature t, R_t = R_0(1 + αt). Combining these, we get t = [(R_t - R_0) / (R_100 - R_0)] * 100. Substituting the given values: t = [(5.795 - 5.000) / (5.230 - 5.000)] * 100 = (0.795 / 0.230) * 100 = 3.4565 * 100 = 345.65°C.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790358301089-2",
+            "question_text": "A cell of electromotive force (emf) E and internal resistance r is connected across a variable external resistor R. At what value of R is the power dissipated in the external circuit maximum?",
+            "options": [
+              "R = r",
+              "R = r/2",
+              "R = 0",
+              "R = 2r"
+            ],
+            "correct_answer": "R = r",
+            "explanation": "The power P dissipated in the external resistor R is given by P = I²R. Since I = E / (R + r), we have P = [E / (R + r)]² * R. To find the maximum power, we differentiate P with respect to R and set it to zero: dP/dR = E² [ (R+r)² - 2R(R+r) ] / (R+r)⁴ = 0. This simplifies to (R+r) - 2R = 0, which gives R = r. This is known as the Maximum Power Transfer Theorem, stating that the power output is maximum when the external load resistance matches the internal resistance of the source.",
+            "topic": "Current Electricity",
+            "difficulty": "medium"
+          }
+        ],
+        "duration_minutes": 5,
+        "durationMinutes": 5,
+        "difficulty": "medium",
+        "subtopic": null,
+        "subjects": [
+          "Physics"
+        ]
+      },
+      "answers": [
+        {
+          "id": "ans-1790358304180-n7v1o",
+          "attempt_id": "att-1790358302257",
+          "question_id": "q-1790358301089-0",
+          "selected_answer": "It becomes one-fourth",
+          "is_correct": true,
+          "time_taken": 0
+        },
+        {
+          "id": "ans-1790358304902-ts26q",
+          "attempt_id": "att-1790358302257",
+          "question_id": "q-1790358301089-1",
+          "selected_answer": "380.15°C",
+          "is_correct": false,
+          "time_taken": 0
+        }
+      ],
+      "completed_at": "2026-09-25T17:45:05.469Z"
+    },
+    {
+      "id": "att-1790352832324",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "test_id": "test-1790352831778",
+      "score": 67,
+      "started_at": "2026-09-25T16:13:52.324Z",
+      "tests": {
+        "id": "test-1790352831778",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "title": "JEE Practice: Physics — Electrostatics (3 Qs • 5m • MEDIUM)",
+        "subject": "Physics",
+        "chapter": "Electrostatics",
+        "exam": "JEE",
+        "total_questions": 3,
+        "created_at": "2026-09-25T16:13:51.778Z",
+        "questions": [
+          {
+            "id": "q-1790352831778-0",
+            "question_text": "A thin semi-circular ring of radius $R$ is placed in the $xy$-plane with its center at the origin. The linear charge density of the ring varies with the angle $\\theta$ (measured from the positive $x$-axis) as $\\lambda = \\lambda_0 \\cos \\theta$, for $-\\pi/2 \\leq \\theta \\leq \\pi/2$. Determine the magnitude of the net electric field at the origin.",
+            "options": [
+              "\\frac{\\lambda_0}{8 \\epsilon_0 R}",
+              "\\frac{\\lambda_0}{4 \\epsilon_0 R}",
+              "\\frac{\\lambda_0}{2 \\epsilon_0 R}",
+              "\\frac{\\pi \\lambda_0}{8 \\epsilon_0 R}"
+            ],
+            "correct_answer": "\\frac{\\lambda_0}{8 \\epsilon_0 R}",
+            "explanation": "To find the electric field at the origin, consider a small element $dl = R d\\theta$ at an angle $\\theta$. The charge on this element is $dq = \\lambda dl = (\\lambda_0 \\cos \\theta) R d\\theta$. The electric field $d\\vec{E}$ at the origin due to this element is $dE = \\frac{1}{4\\pi\\epsilon_0} \\frac{dq}{R^2} = \\frac{\\lambda_0 \\cos \\theta d\\theta}{4\\pi\\epsilon_0 R}$. \n\nThe components are $dE_x = -dE \\cos \\theta$ and $dE_y = -dE \\sin \\theta$. \nIntegrating $dE_x$ from $-\\pi/2$ to $\\pi/2$: \n$E_x = -\\int_{-\\pi/2}^{\\pi/2} \\frac{\\lambda_0 \\cos^2 \\theta}{4\\pi\\epsilon_0 R} d\\theta = -\\frac{\\lambda_0}{4\\pi\\epsilon_0 R} \\int_{-\\pi/2}^{\\pi/2} \\frac{1 + \\cos 2\\theta}{2} d\\theta = -\\frac{\\lambda_0}{4\\pi\\epsilon_0 R} [\\frac{\\theta}{2} + \\frac{\\sin 2\\theta}{4}]_{-\\pi/2}^{\\pi/2} = -\\frac{\\lambda_0}{4\\pi\\epsilon_0 R} (\\frac{\\pi}{2}) = -\\frac{\\lambda_0}{8 \\epsilon_0 R}$. \n\nIntegrating $dE_y$ from $-\\pi/2$ to $\\pi/2$: \n$E_y = -\\int_{-\\pi/2}^{\\pi/2} \\frac{\\lambda_0 \\cos \\theta \\sin \\theta}{4\\pi\\epsilon_0 R} d\\theta$. Since $\\sin \\theta \\cos \\theta$ is an odd function, the integral over symmetric limits is zero. \n\nThe magnitude is $|E_x| = \\frac{\\lambda_0}{8 \\epsilon_0 R}$. Distractors like $\\lambda_0/4\\epsilon_0 R$ occur if the $1/2$ factor from the $\\cos^2$ integration is missed.",
+            "topic": "Electrostatics",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790352831778-1",
+            "question_text": "A solid non-conducting sphere of radius $R$ carries a non-uniform volume charge density given by $\\rho(r) = \\rho_0 (1 - \\frac{r}{R})$, where $r$ is the distance from the center. Calculate the magnitude of the electric field at a point located at $r = R/2$.",
+            "options": [
+              "\\frac{5 \\rho_0 R}{48 \\epsilon_0}",
+              "\\frac{5 \\rho_0 R}{24 \\epsilon_0}",
+              "\\frac{\\rho_0 R}{12 \\epsilon_0}",
+              "\\frac{7 \\rho_0 R}{96 \\epsilon_0}"
+            ],
+            "correct_answer": "\\frac{5 \\rho_0 R}{48 \\epsilon_0}",
+            "explanation": "Using Gauss's Law: $\\oint \\vec{E} \\cdot d\\vec{A} = \\frac{q_{enclosed}}{\\epsilon_0}$. \nFor a Gaussian surface of radius $r = R/2$, $E(4\\pi r^2) = \\frac{1}{\\epsilon_0} \\int_0^{R/2} \\rho(r) 4\\pi r^2 dr$. \n$E(4\\pi (R/2)^2) = \\frac{4\\pi \\rho_0}{\\epsilon_0} \\int_0^{R/2} (r^2 - \\frac{r^3}{R}) dr$. \n$E(\\pi R^2) = \\frac{4\\pi \\rho_0}{\\epsilon_0} [\\frac{r^3}{3} - \\frac{r^4}{4R}]_0^{R/2} = \\frac{4\\pi \\rho_0}{\\epsilon_0} [\\frac{R^3}{24} - \\frac{R^4}{64R}] = \\frac{4\\pi \\rho_0}{\\epsilon_0} [\\frac{8R^3 - 3R^3}{192}] = \\frac{4\\pi \\rho_0}{\\epsilon_0} (\\frac{5R^3}{192})$. \nSolving for $E$: $E = \\frac{4 \\rho_0}{R^2 \\epsilon_0} \\frac{5R^3}{192} = \\frac{20 \\rho_0 R}{192 \\epsilon_0} = \\frac{5 \\rho_0 R}{48 \\epsilon_0}$. \nCommon errors involve incorrect integration limits or forgetting the $r^2$ term in the volume element $4\\pi r^2 dr$.",
+            "topic": "Electrostatics",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790352831778-2",
+            "question_text": "An electric dipole of moment $\\vec{p} = p\\hat{i}$ is fixed at the origin. A point charge $+q$ is moved by an external agent from point $A(d, 0, 0)$ to point $B(0, d, 0)$ along a semi-circular path in the $xy$-plane. Find the work done by the electric field of the dipole during this process.",
+            "options": [
+              "\\frac{pq}{2\\pi\\epsilon_0 d^2}",
+              "\\frac{pq}{4\\pi\\epsilon_0 d^2}",
+              "-\\frac{pq}{4\\pi\\epsilon_0 d^2}",
+              "0"
+            ],
+            "correct_answer": "\\frac{pq}{4\\pi\\epsilon_0 d^2}",
+            "explanation": "The work done by the electric field is $W_{field} = -\\Delta U = -q(V_B - V_A) = q(V_A - V_B)$. \nThe electrostatic potential $V$ at a position $\\vec{r}$ due to a dipole $\\vec{p}$ is $V = \\frac{1}{4\\pi\\epsilon_0} \\frac{\\vec{p} \\cdot \\vec{r}}{r^3} = \\frac{p \\cos \\theta}{4\\pi\\epsilon_0 r^2}$. \nFor point $A(d, 0, 0)$: $r = d$ and $\\theta = 0^\\circ$ (along the dipole axis). Thus, $V_A = \\frac{p \\cos 0^\\circ}{4\\pi\\epsilon_0 d^2} = \\frac{p}{4\\pi\\epsilon_0 d^2}$. \nFor point $B(0, d, 0)$: $r = d$ and $\\theta = 90^\\circ$ (on the equatorial plane). Thus, $V_B = \\frac{p \\cos 90^\\circ}{4\\pi\\epsilon_0 d^2} = 0$. \n$W_{field} = q(V_A - V_B) = q(\\frac{p}{4\\pi\\epsilon_0 d^2} - 0) = \\frac{pq}{4\\pi\\epsilon_0 d^2}$. \nDistractors include the negative of this value (work done by external agent) or zero (misinterpreting the path-independence or equatorial symmetry).",
+            "topic": "Electrostatics",
+            "difficulty": "medium"
+          }
+        ],
+        "duration_minutes": 5,
+        "durationMinutes": 5,
+        "difficulty": "medium",
+        "subtopic": null,
+        "subjects": [
+          "Physics"
+        ]
+      },
+      "answers": [
+        {
+          "id": "ans-1790352833309-q5uj6",
+          "attempt_id": "att-1790352832324",
+          "question_id": "q-1790352831778-0",
+          "selected_answer": "\\frac{\\lambda_0}{8 \\epsilon_0 R}",
+          "is_correct": true,
+          "time_taken": 30
+        },
+        {
+          "id": "ans-1790352833836-pd4tz",
+          "attempt_id": "att-1790352832324",
+          "question_id": "q-1790352831778-1",
+          "selected_answer": "\\frac{5 \\rho_0 R}{24 \\epsilon_0}",
+          "is_correct": false,
+          "time_taken": 45
+        },
+        {
+          "id": "ans-1790352834053-1g8jr",
+          "attempt_id": "att-1790352832324",
+          "question_id": "q-1790352831778-2",
+          "selected_answer": "\\frac{pq}{4\\pi\\epsilon_0 d^2}",
+          "is_correct": true,
+          "time_taken": 25
+        }
+      ],
+      "completed_at": "2026-09-25T16:13:54.303Z"
+    },
+    {
+      "id": "att-1790271837734",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "test_id": "test-1790271834780",
+      "score": 32,
+      "started_at": "2026-09-24T17:43:57.735Z",
+      "tests": {
+        "id": "test-1790271834780",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "title": "NEET Practice: Physics — Electromagnetic Waves (25 Qs • 38m)",
+        "subject": "Physics",
+        "chapter": "Electromagnetic Waves",
+        "exam": "NEET",
+        "total_questions": 25,
+        "created_at": "2026-09-24T17:43:54.780Z",
+        "questions": [
+          {
+            "id": "q-1790271834780-0",
+            "question_text": "Which of the following electromagnetic waves is produced by special vacuum tubes such as klystrons, magnetrons, and Gunn diodes?",
+            "options": [
+              "Infrared waves",
+              "X-rays",
+              "Ultraviolet rays",
+              "Microwaves"
+            ],
+            "correct_answer": "Microwaves",
+            "explanation": "Microwaves (short wavelength radio waves) are produced by special vacuum tubes, namely klystrons, magnetrons, and Gunn diodes. They have frequencies in the gigahertz range and are used in radar and microwave ovens.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-1",
+            "question_text": "Which part of the electromagnetic spectrum is absorbed by the ozone layer in the earth's atmosphere?",
+            "options": [
+              "Infrared rays",
+              "Gamma rays",
+              "Ultraviolet rays",
+              "Radio waves"
+            ],
+            "correct_answer": "Ultraviolet rays",
+            "explanation": "Ultraviolet (UV) radiation from the sun is largely absorbed by the ozone layer in the stratosphere, protecting life on Earth from its harmful effects such as skin cancer and genetic mutations.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-2",
+            "question_text": "What is the source of infrared waves in the electromagnetic spectrum?",
+            "options": [
+              "Inner shell electrons in heavy atoms",
+              "Klystron tubes",
+              "Hot bodies and molecules",
+              "Radioactive decay of nuclei"
+            ],
+            "correct_answer": "Hot bodies and molecules",
+            "explanation": "Infrared waves are produced by hot bodies and molecules. Because thermal radiation is largely infrared waves, they are often referred to as heat waves.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-3",
+            "question_text": "Displacement current is produced due to:",
+            "options": [
+              "Motion of free electrons in a conductor",
+              "Time-varying electric field",
+              "Steady electric current only",
+              "Constant magnetic field"
+            ],
+            "correct_answer": "Time-varying electric field",
+            "explanation": "Displacement current, introduced by Maxwell, is given by $I_d = \\varepsilon_0 \\frac{d\\Phi_E}{dt}$. It arises exclusively due to a time-varying electric field or changing electric flux, even in regions where no conduction current exists (such as across capacitor plates).",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-4",
+            "question_text": "The ratio of the amplitudes of the electric field ($E_0$) and magnetic field ($B_0$) of an electromagnetic wave in vacuum is equal to:",
+            "options": [
+              "c",
+              "1/c^2",
+              "1/c",
+              "c^2"
+            ],
+            "correct_answer": "c",
+            "explanation": "In an electromagnetic wave propagating in free space, the magnitudes of the electric and magnetic fields are related by $E_0 / B_0 = c$, where $c$ is the speed of light in vacuum.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-5",
+            "question_text": "Which of the following electromagnetic radiations has the maximum frequency?",
+            "options": [
+              "Ultraviolet rays",
+              "Visible light",
+              "X-rays",
+              "Gamma rays"
+            ],
+            "correct_answer": "Gamma rays",
+            "explanation": "In the electromagnetic spectrum arranged in order of increasing frequency, gamma rays have the highest frequency (and shortest wavelength), originating from the radioactive decay of atomic nuclei.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-6",
+            "question_text": "Electromagnetic waves are transverse in nature. This is evident by the phenomenon of:",
+            "options": [
+              "Diffraction",
+              "Interference",
+              "Reflection",
+              "Polarization"
+            ],
+            "correct_answer": "Polarization",
+            "explanation": "Polarization is a phenomenon exclusive to transverse waves, which demonstrates that the electric vector in an electromagnetic wave oscillates in a direction perpendicular to the direction of wave propagation.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-7",
+            "question_text": "If the amplitude of the magnetic field in a plane electromagnetic wave is $B_0 = 3 \\times 10^{-8}\\text{ T}$, the amplitude of the electric field ($E_0$) is:",
+            "options": [
+              "3 V/m",
+              "10 V/m",
+              "300 V/m",
+              "9 V/m"
+            ],
+            "correct_answer": "9 V/m",
+            "explanation": "Using the relation $E_0 = c \\cdot B_0$, where $c = 3 \\times 10^8\\text{ m/s}$ and $B_0 = 3 \\times 10^{-8}\\text{ T}$, we get $E_0 = (3 \\times 10^8) \\times (3 \\times 10^{-8}) = 9\\text{ V/m}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-8",
+            "question_text": "Which waves are used in 'LASIK' eye surgery?",
+            "options": [
+              "Ultraviolet rays",
+              "Infrared waves",
+              "X-rays",
+              "Microwaves"
+            ],
+            "correct_answer": "Ultraviolet rays",
+            "explanation": "Ultraviolet rays, specifically from lasers like excimer lasers, are used in precision medical procedures such as LASIK (Laser-Assisted in Situ Keratomileusis) eye surgery to reshape the cornea.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-9",
+            "question_text": "The energy density of an electromagnetic wave is divided equally between electric field and magnetic field. The energy density associated with the electric field is given by:",
+            "options": [
+              "\\frac{1}{4} \\varepsilon_0 E^2",
+              "\\frac{1}{2 \\mu_0} B^2",
+              "\\varepsilon_0 E^2",
+              "\\frac{1}{2} \\varepsilon_0 E^2"
+            ],
+            "correct_answer": "\\frac{1}{2} \\varepsilon_0 E^2",
+            "explanation": "The energy density (energy per unit volume) stored in an electric field in free space is given by $u_E = \\frac{1}{2} \\varepsilon_0 E^2$. An equal amount of energy density is stored in the magnetic field.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-10",
+            "question_text": "Which electromagnetic wave is commonly used in remote switches of household electronic devices like television sets?",
+            "options": [
+              "X-rays",
+              "Infrared waves",
+              "Ultraviolet waves",
+              "Microwaves"
+            ],
+            "correct_answer": "Infrared waves",
+            "explanation": "Infrared waves are emitted by LEDs in remote controls and are used to operate household electronic appliances like TVs, ACs, and music systems.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-11",
+            "question_text": "In a plane electromagnetic wave travelling along the z-direction, if the oscillating electric field is along the x-axis, the oscillating magnetic field must be along:",
+            "options": [
+              "The y-axis",
+              "The negative x-axis",
+              "Any direction in the xy-plane",
+              "The z-axis"
+            ],
+            "correct_answer": "The y-axis",
+            "explanation": "Direction of propagation of an electromagnetic wave is given by the cross product of the electric and magnetic fields ($\\vec{E} \\times \\vec{B}$). Since propagation is along $\\hat{k}$ (z-axis) and $\\vec{E}$ is along $\\hat{i}$ (x-axis), $\\vec{B}$ must be along $\\hat{j}$ (y-axis) because $\\hat{i} \\times \\hat{j} = \\hat{k}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-12",
+            "question_text": "What is the speed of electromagnetic waves in a material medium of relative permittivity $\\varepsilon_r$ and relative magnetic permeability $\\mu_r$?",
+            "options": [
+              "c = \\frac{1}{\\sqrt{\\mu_0 \\varepsilon_0}}",
+              "v = \\frac{c}{\\sqrt{\\mu_r \\varepsilon_r}}",
+              "v = c \\sqrt{\\mu_r \\varepsilon_r}",
+              "v = \\frac{c}{\\mu_r \\varepsilon_r}"
+            ],
+            "correct_answer": "v = \\frac{c}{\\sqrt{\\mu_r \\varepsilon_r}}",
+            "explanation": "The speed of light/EM waves in a medium is given by $v = \\frac{1}{\\sqrt{\\mu \\varepsilon}} = \\frac{1}{\\sqrt{\\mu_0 \\mu_r \\varepsilon_0 \\varepsilon_r}} = \\frac{c}{\\sqrt{\\mu_r \\varepsilon_r}}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-13",
+            "question_text": "Maxwell modified Ampere's circuital law by adding:",
+            "options": [
+              "Displacement current",
+              "Eddy current",
+              "Conduction current",
+              "Induction current"
+            ],
+            "correct_answer": "Displacement current",
+            "explanation": "Maxwell realized that Ampere's circuital law was logically inconsistent for non-steady currents. He added the displacement current term ($I_d = \\varepsilon_0 \\frac{d\\Phi_E}{dt}$) to make it consistent, yielding the Ampere-Maxwell law.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-14",
+            "question_text": "Which of the following rays are used to detect fractures in bones and for diagnostic purposes in medicine?",
+            "options": [
+              "Ultraviolet rays",
+              "Gamma rays",
+              "Infrared rays",
+              "X-rays"
+            ],
+            "correct_answer": "X-rays",
+            "explanation": "X-rays have high penetrating power through soft tissues and are heavily absorbed by dense structures like bones, making them invaluable for medical radiography and detecting fractures.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-15",
+            "question_text": "The RMS value of the electric field ($E_{rms}$) in an electromagnetic wave is related to the peak electric field ($E_0$) by:",
+            "options": [
+              "E_{rms} = E_0 / \\sqrt{2}",
+              "E_{rms} = E_0",
+              "E_{rms} = E_0 / 2",
+              "E_{rms} = E_0 \\times \\sqrt{2}"
+            ],
+            "correct_answer": "E_{rms} = E_0 / \\sqrt{2}",
+            "explanation": "For any sinusoidally varying quantity like the electric field in an electromagnetic wave, the root-mean-square (RMS) value is related to the peak value by $E_{rms} = \\frac{E_0}{\\sqrt{2}}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-16",
+            "question_text": "Which electromagnetic radiations are used in radar systems for aircraft navigation?",
+            "options": [
+              "Radio waves",
+              "Ultraviolet rays",
+              "Microwaves",
+              "Infrared rays"
+            ],
+            "correct_answer": "Microwaves",
+            "explanation": "Microwaves have short wavelengths and can be directed in narrow beams, making them ideal for radar systems used in air traffic control, navigation, and speed gun tracking.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-17",
+            "question_text": "Intensity ($I$) of an electromagnetic wave is defined as energy crossing per unit area per unit time. It is related to the electric field amplitude ($E_0$) and speed of light ($c$) as:",
+            "options": [
+              "I = \\varepsilon_0 c E_0^2",
+              "I = \\frac{1}{4} \\varepsilon_0 c E_0^2",
+              "I = \\frac{1}{2} \\varepsilon_0 c^2 E_0^2",
+              "I = \\frac{1}{2} \\varepsilon_0 c E_0^2"
+            ],
+            "correct_answer": "I = \\frac{1}{2} \\varepsilon_0 c E_0^2",
+            "explanation": "The intensity of an electromagnetic wave is the average power per unit area, given by $I = U_{avg} \\cdot c = \\left(\\frac{1}{2} \\varepsilon_0 E_0^2\\right) c = \\frac{1}{2} \\varepsilon_0 c E_0^2$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-18",
+            "question_text": "Which of the following electromagnetic waves has the longest wavelength?",
+            "options": [
+              "Radio waves",
+              "Microwaves",
+              "Visible light",
+              "X-rays"
+            ],
+            "correct_answer": "Radio waves",
+            "explanation": "Radio waves occupy the lowest frequency and therefore the longest wavelength end of the electromagnetic spectrum, with wavelengths ranging from $10^{-1}\\text{ m}$ to upwards of $10^4\\text{ m}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-19",
+            "question_text": "Electromagnetic waves carry momentum. If a wave of total energy $U$ is completely absorbed by a surface, the total momentum delivered to the surface is:",
+            "options": [
+              "p = U/c^2",
+              "p = 0",
+              "p = U/c",
+              "p = Uc"
+            ],
+            "correct_answer": "p = U/c",
+            "explanation": "Electromagnetic waves exert radiation pressure and carry linear momentum. When a wave of energy $U$ is completely absorbed, the momentum delivered is $p = \\frac{U}{c}$. If reflected completely, it is $p = \\frac{2U}{c}$.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-20",
+            "question_text": "Which Maxwell's equation mathematically expresses the non-existence of magnetic monopoles (Gauss's law for magnetism)?",
+            "options": [
+              "\\oint \\vec{E} \\cdot d\\vec{l} = - \\frac{d\\Phi_B}{dt}",
+              "\\oint \\vec{B} \\cdot d\\vec{l} = \\mu_0 i_c + \\mu_0 \\varepsilon_0 \\frac{d\\Phi_E}{dt}",
+              "\\oint \\vec{B} \\cdot d\\vec{A} = 0",
+              "\\oint \\vec{E} \\cdot d\\vec{A} = \\frac{q}{\\varepsilon_0}"
+            ],
+            "correct_answer": "\\oint \\vec{B} \\cdot d\\vec{A} = 0",
+            "explanation": "Gauss's law for magnetism states that the net magnetic flux through any closed surface is always zero, which implies that magnetic monopoles do not exist and magnetic field lines form continuous closed loops.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-21",
+            "question_text": "The ozone layer residing in the stratosphere absorbs which of the following wavelength ranges of solar radiation?",
+            "options": [
+              "Radio waves",
+              "Infrared radiation",
+              "Ultraviolet radiation",
+              "Microwaves"
+            ],
+            "correct_answer": "Ultraviolet radiation",
+            "explanation": "The ozone ($O_3$) layer in the stratosphere specifically absorbs harmful ultraviolet (UV) radiation (particularly UV-B and UV-C) coming from the sun, shielding the Earth's surface.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-22",
+            "question_text": "Which of the following frequency bands is typically used for commercial FM radio broadcasting?",
+            "options": [
+              "530 kHz to 1710 kHz",
+              "30 MHz to 300 MHz",
+              "3 GHz to 30 GHz",
+              "88 MHz to 108 MHz"
+            ],
+            "correct_answer": "88 MHz to 108 MHz",
+            "explanation": "Commercial Frequency Modulation (FM) radio broadcasting operates in the VHF (Very High Frequency) band ranging from 88 MHz to 108 MHz. AM radio uses the 530 kHz to 1710 kHz band.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-23",
+            "question_text": "Accelerated charges radiate electromagnetic waves. The frequency of the emitted electromagnetic wave is equal to:",
+            "options": [
+              "Half of the frequency of oscillation",
+              "The frequency of oscillation of the charge",
+              "Zero",
+              "Twice the frequency of oscillation"
+            ],
+            "correct_answer": "The frequency of oscillation of the charge",
+            "explanation": "According to classical electrodynamics, an accelerating charge radiates electromagnetic waves whose frequency is equal to the frequency of oscillation of the charge itself.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790271834780-24",
+            "question_text": "Which part of the electromagnetic spectrum is used to study the crystal structure of solids through diffraction?",
+            "options": [
+              "X-rays",
+              "Ultraviolet rays",
+              "Gamma rays",
+              "Infrared rays"
+            ],
+            "correct_answer": "X-rays",
+            "explanation": "X-rays have wavelengths of the order of an angstrom ($10^{-10}\\text{ m}$), which is comparable to the interatomic spacing in crystals. Hence, they are used in X-ray crystallography to determine crystal structures.",
+            "topic": "Electromagnetic Waves",
+            "difficulty": "medium"
+          }
+        ],
+        "duration_minutes": 38,
+        "durationMinutes": 38,
+        "difficulty": "all",
+        "subtopic": null,
+        "subjects": [
+          "Physics"
+        ]
+      },
+      "answers": [
+        {
+          "id": "ans-1790271944511-8ncg2",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-0",
+          "selected_answer": "X-rays",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271944732-qtwvj",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-1",
+          "selected_answer": "Infrared rays",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271944951-qtzf9",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-2",
+          "selected_answer": "Hot bodies and molecules",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271945176-uwzqn",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-3",
+          "selected_answer": "Time-varying electric field",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271945750-e7332",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-4",
+          "selected_answer": "c",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271945972-4k2jc",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-5",
+          "selected_answer": "Gamma rays",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271946181-loeti",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-6",
+          "selected_answer": "Interference",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271946411-qmr0f",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-7",
+          "selected_answer": "10 V/m",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271946628-khp49",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-8",
+          "selected_answer": "X-rays",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271946851-h97a3",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-9",
+          "selected_answer": "\\frac{1}{4} \\varepsilon_0 E^2",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271947073-4wdik",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-10",
+          "selected_answer": "Microwaves",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271947302-v7a61",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-11",
+          "selected_answer": "The y-axis",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271947533-nf58b",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-12",
+          "selected_answer": "v = \\frac{c}{\\sqrt{\\mu_r \\varepsilon_r}}",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271947764-4bp3n",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-13",
+          "selected_answer": "Eddy current",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271948001-jzd6r",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-14",
+          "selected_answer": "Ultraviolet rays",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271948223-4689a",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-15",
+          "selected_answer": "E_{rms} = E_0",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271948440-twkc3",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-16",
+          "selected_answer": "Radio waves",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271948957-7c0u4",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-17",
+          "selected_answer": "I = \\varepsilon_0 c E_0^2",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271949172-qhztr",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-18",
+          "selected_answer": "Microwaves",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271949394-ypb31",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-19",
+          "selected_answer": "p = U/c^2",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271949605-kruxq",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-20",
+          "selected_answer": "\\oint \\vec{B} \\cdot d\\vec{l} = \\mu_0 i_c + \\mu_0 \\varepsilon_0 \\frac{d\\Phi_E}{dt}",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271949823-att6t",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-21",
+          "selected_answer": "Infrared radiation",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271950329-zz7o2",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-22",
+          "selected_answer": "30 MHz to 300 MHz",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271950550-4v6ye",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-23",
+          "selected_answer": "The frequency of oscillation of the charge",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790271950777-eli43",
+          "attempt_id": "att-1790271837734",
+          "question_id": "q-1790271834780-24",
+          "selected_answer": "X-rays",
+          "is_correct": true,
+          "time_taken": 1
+        }
+      ],
+      "completed_at": "2026-09-24T17:45:51.303Z"
+    },
+    {
+      "id": "att-1790270050337",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "test_id": "test-1790270047693",
+      "score": 36,
+      "started_at": "2026-09-24T17:14:10.337Z",
+      "tests": {
+        "id": "test-1790270047693",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "title": "NEET Practice: Physics — Semiconductor Electronics: Materials, Devices and Simple Circuits (25 Qs • 38m)",
+        "subject": "Physics",
+        "chapter": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+        "exam": "NEET",
+        "total_questions": 25,
+        "created_at": "2026-09-24T17:14:07.693Z",
+        "questions": [
+          {
+            "id": "q-1790270047693-0",
+            "question_text": "A pure semiconductor behaves like an insulator at absolute zero temperature (0 K) because:",
+            "options": [
+              "The conduction band is completely empty and the valence band is completely filled.",
+              "The covalent bonds are very strong and cannot be broken.",
+              "The mobility of charge carriers becomes zero at 0 K.",
+              "The energy gap between the valence and conduction band is infinite."
+            ],
+            "correct_answer": "The conduction band is completely empty and the valence band is completely filled.",
+            "explanation": "At absolute zero (0 K), electrons do not have enough thermal energy to jump from the valence band to the conduction band. Since the conduction band is completely empty and there are no vacancies (holes) in the valence band for movement, no conduction occurs, making it an insulator.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-1",
+            "question_text": "In an n-type semiconductor, which of the following statements is true regarding the Fermi level?",
+            "options": [
+              "It lies inside the conduction band.",
+              "It lies closer to the conduction band.",
+              "It lies exactly in the middle of the energy gap.",
+              "It lies closer to the valence band."
+            ],
+            "correct_answer": "It lies closer to the conduction band.",
+            "explanation": "In an n-type semiconductor, donor impurities create additional energy levels just below the conduction band. As the concentration of electrons in the conduction band increases, the probability of finding an electron at higher energy levels increases, shifting the Fermi level upwards, closer to the bottom of the conduction band.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-2",
+            "question_text": "What is the order of the energy gap (Eg) for a typical semiconductor like Silicon at room temperature?",
+            "options": [
+              "~ 0.01 eV",
+              "~ 1.1 eV",
+              "~ 7.0 eV",
+              "~ 3.0 eV"
+            ],
+            "correct_answer": "~ 1.1 eV",
+            "explanation": "Silicon has an energy gap of approximately 1.1 eV at room temperature. Materials with Eg < 3 eV are generally classified as semiconductors, while those with Eg > 3 eV (like Diamond ~5.4 eV) are insulators.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-3",
+            "question_text": "When a p-n junction is forward biased, the width of the depletion layer:",
+            "options": [
+              "Increases",
+              "Remains unchanged",
+              "First increases then decreases",
+              "Decreases"
+            ],
+            "correct_answer": "Decreases",
+            "explanation": "In forward bias, the positive terminal of the battery is connected to the p-side and the negative terminal to the n-side. This external field opposes the built-in potential barrier, pushing majority carriers towards the junction and narrowing the depletion region.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-4",
+            "question_text": "In a p-type semiconductor, the majority charge carriers and the impurity atoms are respectively:",
+            "options": [
+              "Holes and Trivalent atoms",
+              "Electrons and Pentavalent atoms",
+              "Electrons and Trivalent atoms",
+              "Holes and Pentavalent atoms"
+            ],
+            "correct_answer": "Holes and Trivalent atoms",
+            "explanation": "A p-type semiconductor is created by doping an intrinsic semiconductor with trivalent impurities (like Boron, Aluminum, Gallium). These atoms create 'holes' as they accept an electron from the lattice, making holes the majority charge carriers.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-5",
+            "question_text": "At room temperature, an intrinsic semiconductor has an intrinsic carrier concentration of 1.5 x 10^16 m^-3. If it is doped with a pentavalent impurity such that the electron concentration becomes 4.5 x 10^22 m^-3, what is the hole concentration?",
+            "options": [
+              "2.25 x 10^9 m^-3",
+              "3.33 x 10^9 m^-3",
+              "5.0 x 10^9 m^-3",
+              "0.5 x 10^10 m^-3"
+            ],
+            "correct_answer": "5.0 x 10^9 m^-3",
+            "explanation": "According to the Law of Mass Action, n_e * n_h = n_i^2. Given n_i = 1.5 x 10^16 and n_e = 4.5 x 10^22. So, n_h = (n_i^2) / n_e = (1.5 x 10^16)^2 / (4.5 x 10^22) = (2.25 x 10^32) / (4.5 x 10^22) = 0.5 x 10^10 = 5.0 x 10^9 m^-3.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-6",
+            "question_text": "The diffusion current in a p-n junction is caused by:",
+            "options": [
+              "The thermal agitation of atoms in the depletion region.",
+              "The concentration gradient of charge carriers across the junction.",
+              "The movement of charge carriers due to the electric field.",
+              "The potential difference applied across the diode."
+            ],
+            "correct_answer": "The concentration gradient of charge carriers across the junction.",
+            "explanation": "Diffusion current occurs because there is a high concentration of holes on the p-side and a high concentration of electrons on the n-side. This gradient causes carriers to migrate across the junction to regions of lower concentration.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-7",
+            "question_text": "A Zener diode is specifically used in which of the following circuits?",
+            "options": [
+              "Voltage regulator",
+              "Half-wave rectifier",
+              "Amplifier",
+              "Full-wave rectifier"
+            ],
+            "correct_answer": "Voltage regulator",
+            "explanation": "A Zener diode is designed to operate in the reverse breakdown region. Once the Zener breakdown voltage is reached, the voltage across the diode remains constant even if the current through it changes significantly, making it ideal for voltage regulation.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-8",
+            "question_text": "If a full-wave rectifier is operating at a supply frequency of 50 Hz, the fundamental ripple frequency in the output will be:",
+            "options": [
+              "25 Hz",
+              "50 Hz",
+              "100 Hz",
+              "75 Hz"
+            ],
+            "correct_answer": "100 Hz",
+            "explanation": "In a full-wave rectifier, both halves of the AC cycle are converted into DC. This results in two pulses per input cycle. Therefore, the output ripple frequency is double the input frequency: 2 * 50 Hz = 100 Hz.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-9",
+            "question_text": "Which of the following logic gates is known as a 'Universal Gate'?",
+            "options": [
+              "OR gate",
+              "NAND gate",
+              "NOT gate",
+              "AND gate"
+            ],
+            "correct_answer": "NAND gate",
+            "explanation": "NAND and NOR gates are called universal gates because any other logic gate (AND, OR, NOT) can be realized using only NAND or only NOR gates.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-10",
+            "question_text": "In a photodiode, the current increases when light falls on it. For better sensitivity, the photodiode is always operated in:",
+            "options": [
+              "No bias",
+              "Reverse bias",
+              "Forward bias",
+              "Breakdown region"
+            ],
+            "correct_answer": "Reverse bias",
+            "explanation": "In reverse bias, the dark current (current without light) is very small. When light falls on the junction, the fractional change in the minority carrier current (reverse current) is much more significant and easier to measure than the change in majority carrier current (forward current).",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-11",
+            "question_text": "A Light Emitting Diode (LED) emits light only when it is:",
+            "options": [
+              "Forward biased",
+              "In Zener breakdown",
+              "Connected to an AC source",
+              "Reverse biased"
+            ],
+            "correct_answer": "Forward biased",
+            "explanation": "LEDs emit light through the process of spontaneous emission during electron-hole recombination. This recombination occurs at the junction when the diode is forward biased, allowing carriers to cross the depletion layer and drop into lower energy states, releasing energy as photons.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-12",
+            "question_text": "The Boolean expression for a NOR gate is:",
+            "options": [
+              "Y = A . B",
+              "Y = A + B",
+              "Y = (A + B)'",
+              "Y = (A . B)'"
+            ],
+            "correct_answer": "Y = (A + B)'",
+            "explanation": "The NOR gate is an OR gate followed by a NOT gate. The OR operation is (A + B), and its negation is (A + B)', often written as A+B with a bar over it.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-13",
+            "question_text": "For a logic circuit, if the output is 0 only when both inputs A and B are 1, the gate must be:",
+            "options": [
+              "NAND",
+              "NOR",
+              "OR",
+              "AND"
+            ],
+            "correct_answer": "NAND",
+            "explanation": "The AND gate produces an output of 1 only when both inputs are 1. The NAND gate (NOT-AND) produces the exact opposite: an output of 0 only when both inputs are 1. For all other combinations (0,0; 0,1; 1,0), the NAND gate output is 1.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-14",
+            "question_text": "Which of the following materials is preferred for making Solar Cells?",
+            "options": [
+              "Silicon (Si)",
+              "Cadmium Telluride (CdTe)",
+              "Gallium Arsenide (GaAs)",
+              "All of the above"
+            ],
+            "correct_answer": "All of the above",
+            "explanation": "Materials for solar cells are chosen based on high optical absorption (around 1.5 eV bandgap), high electrical conductivity, and availability. Si, GaAs, and CdTe all satisfy these requirements to varying degrees for efficient solar energy conversion.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-15",
+            "question_text": "The 'Knee Voltage' of a Silicon diode is approximately:",
+            "options": [
+              "1.1 V",
+              "0.7 V",
+              "0.3 V",
+              "5.0 V"
+            ],
+            "correct_answer": "0.7 V",
+            "explanation": "The knee voltage (or threshold voltage) is the forward bias voltage at which the current starts increasing rapidly. For Silicon, it is roughly 0.7 V, while for Germanium, it is roughly 0.3 V.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-16",
+            "question_text": "When the temperature of a semiconductor increases, its conductivity increases because:",
+            "options": [
+              "The relaxation time increases.",
+              "The number of charge carriers increases.",
+              "The collision frequency decreases.",
+              "The mass of the charge carriers decreases."
+            ],
+            "correct_answer": "The number of charge carriers increases.",
+            "explanation": "In semiconductors, as temperature rises, more thermal energy is available to break covalent bonds. This significantly increases the concentration of free electrons and holes, which outweighs the effect of decreased relaxation time, resulting in an overall increase in conductivity.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-17",
+            "question_text": "In a p-n junction, the barrier potential is caused by the separation of:",
+            "options": [
+              "Protons and electrons in the nucleus",
+              "Electrons and holes",
+              "Positive and negative ions fixed in the depletion region",
+              "Donor and acceptor atoms throughout the semiconductor"
+            ],
+            "correct_answer": "Positive and negative ions fixed in the depletion region",
+            "explanation": "During junction formation, electrons from the n-side diffuse to the p-side, leaving behind positive donor ions. Similarly, holes from the p-side diffuse to the n-side, leaving behind negative acceptor ions. These fixed ions create an electric field and a potential barrier.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-18",
+            "question_text": "Calculate the dynamic resistance of a diode if the forward current changes from 10 mA to 20 mA when the voltage changes from 0.7 V to 0.75 V.",
+            "options": [
+              "2.5 Ω",
+              "10 Ω",
+              "5 Ω",
+              "50 Ω"
+            ],
+            "correct_answer": "5 Ω",
+            "explanation": "Dynamic resistance r_d = ΔV / ΔI. Given ΔV = 0.75 - 0.7 = 0.05 V and ΔI = 20 mA - 10 mA = 10 mA = 0.01 A. So, r_d = 0.05 / 0.01 = 5 Ω.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-19",
+            "question_text": "In a half-wave rectifier, the r.m.s value of the output current is (where I_o is the peak current):",
+            "options": [
+              "I_o / 2",
+              "I_o / √2",
+              "2 I_o / π",
+              "I_o / π"
+            ],
+            "correct_answer": "I_o / 2",
+            "explanation": "For a half-wave rectified sine wave, the r.m.s current is calculated as I_rms = √[(1/2π) ∫ (I_o sin θ)^2 dθ] integrated from 0 to π. This evaluates to I_o / 2. (Note: For a full-wave rectifier, it is I_o / √2).",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-20",
+            "question_text": "A logic gate has two inputs A and B. If the output is the complement of the sum of A and B, the gate is:",
+            "options": [
+              "OR",
+              "NOR",
+              "AND",
+              "NAND"
+            ],
+            "correct_answer": "NOR",
+            "explanation": "The 'sum' refers to the OR operation (A+B). The 'complement of the sum' is NOT(A+B), which is the definition of a NOR gate.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-21",
+            "question_text": "Why is Germanium usually preferred over Silicon for some low-voltage high-speed applications?",
+            "options": [
+              "Ge has a higher bandgap.",
+              "Ge is cheaper than Si.",
+              "Ge is more thermally stable.",
+              "Ge has a lower knee voltage (~0.3V)."
+            ],
+            "correct_answer": "Ge has a lower knee voltage (~0.3V).",
+            "explanation": "Germanium has a lower barrier potential (knee voltage) of about 0.3V compared to Silicon's 0.7V. This allows it to start conducting at lower voltages, which is beneficial in specific low-power signal detection applications.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-22",
+            "question_text": "Identify the logic gate whose output is 1 if and only if any one of the inputs is 1, but not both.",
+            "options": [
+              "OR",
+              "XOR",
+              "NAND",
+              "AND"
+            ],
+            "correct_answer": "XOR",
+            "explanation": "The XOR (Exclusive OR) gate gives an output of 1 only when the inputs are different (one is 1, the other is 0). If both are 0 or both are 1, the output is 0.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-23",
+            "question_text": "Which of the following is NOT a compound semiconductor?",
+            "options": [
+              "InP",
+              "Ge",
+              "GaAs",
+              "CdS"
+            ],
+            "correct_answer": "Ge",
+            "explanation": "Germanium (Ge) and Silicon (Si) are elemental semiconductors. CdS (Cadmium Sulfide), GaAs (Gallium Arsenide), and InP (Indium Phosphide) are compound semiconductors made from two or more elements.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          },
+          {
+            "id": "q-1790270047693-24",
+            "question_text": "The drift current in a semiconductor is due to:",
+            "options": [
+              "Atmospheric pressure",
+              "Applied electric field",
+              "Magnetic field",
+              "Density gradient"
+            ],
+            "correct_answer": "Applied electric field",
+            "explanation": "Drift current is the flow of charge carriers caused by an external electric field. This is distinct from diffusion current, which is caused by a concentration gradient.",
+            "topic": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+            "difficulty": "medium"
+          }
+        ],
+        "duration_minutes": 38,
+        "durationMinutes": 38,
+        "difficulty": "all",
+        "subtopic": null,
+        "subjects": [
+          "Physics"
+        ]
+      },
+      "answers": [
+        {
+          "id": "ans-1790270147552-t3ztm",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-0",
+          "selected_answer": "The conduction band is completely empty and the valence band is completely filled.",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270148032-j8xw4",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-1",
+          "selected_answer": "It lies closer to the valence band.",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270148524-97612",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-2",
+          "selected_answer": "~ 7.0 eV",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270148739-y8s6u",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-3",
+          "selected_answer": "Increases",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270148947-00ifa",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-4",
+          "selected_answer": "Electrons and Trivalent atoms",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270149146-92yuo",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-5",
+          "selected_answer": "5.0 x 10^9 m^-3",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270149350-fcnin",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-6",
+          "selected_answer": "The concentration gradient of charge carriers across the junction.",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270149562-9sy1e",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-7",
+          "selected_answer": "Amplifier",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270150074-5n2nn",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-8",
+          "selected_answer": "50 Hz",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270150283-481cj",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-9",
+          "selected_answer": "NOT gate",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270150494-un6hx",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-10",
+          "selected_answer": "Reverse bias",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270150704-az97g",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-11",
+          "selected_answer": "Connected to an AC source",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270150906-mmzzj",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-12",
+          "selected_answer": "Y = A . B",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270151106-sty1f",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-13",
+          "selected_answer": "OR",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270151301-uhquj",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-14",
+          "selected_answer": "Silicon (Si)",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270151514-cjwk0",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-15",
+          "selected_answer": "0.7 V",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270151721-8be5d",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-16",
+          "selected_answer": "The relaxation time increases.",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270151926-2b182",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-17",
+          "selected_answer": "Positive and negative ions fixed in the depletion region",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270152125-bi69w",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-18",
+          "selected_answer": "5 Ω",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270152333-mir39",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-19",
+          "selected_answer": "I_o / √2",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270152540-etkhg",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-20",
+          "selected_answer": "OR",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270152748-90kcq",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-21",
+          "selected_answer": "Ge has a lower knee voltage (~0.3V).",
+          "is_correct": true,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270152946-7fhz8",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-22",
+          "selected_answer": "OR",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270153160-8rloz",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-23",
+          "selected_answer": "InP",
+          "is_correct": false,
+          "time_taken": 1
+        },
+        {
+          "id": "ans-1790270153368-nfp1s",
+          "attempt_id": "att-1790270050337",
+          "question_id": "q-1790270047693-24",
+          "selected_answer": "Applied electric field",
+          "is_correct": true,
+          "time_taken": 1
+        }
+      ],
+      "completed_at": "2026-09-24T17:15:53.575Z"
+    }
+  ],
+  "focusSessions": [],
+  "studyActivities": [
+    {
+      "id": "act-doubt-1790434575441-8uka",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-26T14:56:15.441Z"
+    },
+    {
+      "id": "act-doubt-1790434526374-zibf",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-26T14:55:26.374Z"
+    },
+    {
+      "id": "act-doubt-1790358350763-s77j",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-25T17:45:50.763Z"
+    },
+    {
+      "id": "act-doubt-1790358337376-t61f",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-25T17:45:37.376Z"
+    },
+    {
+      "id": "act-doubt-1790352776147-sbtb",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-25T16:12:56.147Z"
+    },
+    {
+      "id": "act-1790271968613-pxr0t",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "quiz_completed",
+      "title": "NEET Practice: Physics — Electromagnetic Waves (25 Qs • 38m)",
+      "subject": "Physics",
+      "points": 74,
+      "duration_seconds": 2250,
+      "created_at": "2026-09-24T17:46:08.613Z"
+    },
+    {
+      "id": "act-1790270171174-5rb5i",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "quiz_completed",
+      "title": "NEET Practice: Physics — Semiconductor Electronics: Materials, Devices and Simple Circuits (25 Qs • 38m)",
+      "subject": "Physics",
+      "points": 77,
+      "duration_seconds": 2250,
+      "created_at": "2026-09-24T17:16:11.174Z"
+    },
+    {
+      "id": "act-doubt-1790269096000-ecwf",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T16:58:16.000Z"
+    },
+    {
+      "id": "act-doubt-1790269061795-7xzm",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T16:57:41.795Z"
+    },
+    {
+      "id": "act-doubt-1790269035707-2o53",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T16:57:15.707Z"
+    },
+    {
+      "id": "act-doubt-1790265467716-pjhk",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Physics",
+      "subject": "Physics",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T15:57:47.716Z"
+    },
+    {
+      "id": "act-doubt-1790254602388-hmph",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: Biology",
+      "subject": "Biology",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T12:56:42.388Z"
+    },
+    {
+      "id": "act-doubt-1790242604384-76mu",
+      "user_id": "00000000-0000-0000-0000-000000000001",
+      "type": "doubt_solved",
+      "title": "AI Doubt: General",
+      "subject": "General",
+      "points": 25,
+      "duration_seconds": 300,
+      "created_at": "2026-09-24T09:36:44.384Z"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Dependencies and local runtimes
+**/node_modules/
+**/venv/
+**/.venv/
+**/venv-*/
+frontend/dist/
+
+# Python caches
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.temp/
+
+# Local generated data
+rag-server/data/chroma/
+gradle_full_log.txt
+
+# OS files and archives
+.DS_Store
+*.zip
+*.tar.gz

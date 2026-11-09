@@ -1,0 +1,32 @@
+{
+  "name": "study-insights-root",
+  "version": "1.2.0",
+  "description": "Root workspace orchestrator for Study Insights (React Native Expo Mobile, Node Express Backend, Python RAG)",
+  "scripts": {
+    "dev": "npm run start:backend",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && node server.js",
+    "dev:backend": "cd backend && npm run dev",
+    "start:rag": "cd rag-server && .\\venv\\Scripts\\python -u -m uvicorn app.main:app --host 0.0.0.0 --port 8000",
+    "start:services": "start-services.bat",
+    "start:app": "cd my-app && npx expo start -c",
+    "start:android": "cd my-app && npx expo start --android",
+    "start:ios": "cd my-app && npx expo start --ios",
+    "test:backend": "cd backend && npm test",
+    "test:rag": "cd rag-server && .\\venv\\Scripts\\python -m unittest tests/test_standalone.py",
+    "test:mobile": "cd my-app && npx tsc --noEmit",
+    "test:all": "npm run test:backend && npm run test:rag && npm run test:mobile"
+  },
+  "keywords": [
+    "study-insights",
+    "react-native",
+    "expo",
+    "express",
+    "supabase",
+    "rag",
+    "chromadb",
+    "gemini"
+  ],
+  "author": "Study Insights Team",
+  "license": "ISC"
+}
