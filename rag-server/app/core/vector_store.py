@@ -174,23 +174,128 @@ class ChromaVectorStore(VectorStore):
 
 class SupabaseVectorStore(VectorStore):
     """
-    Future implementation stub for Supabase PostgreSQL + pgvector.
-    Can be seamlessly implemented by querying the `document_chunks` table with pgvector embeddings
-    without altering any service or API logic.
+    Supabase PostgreSQL + pgvector cloud implementation.
+    Persists vectorized document chunks in Supabase `document_chunks` table,
+    surviving any Render container spin-downs or restarts.
     """
 
     def __init__(self, supabase_url: str = "", supabase_key: str = ""):
-        self.supabase_url = supabase_url
-        self.supabase_key = supabase_key
+        from app.core.config import settings
+        self.supabase_url = (supabase_url or settings.SUPABASE_URL).rstrip("/")
+        self.supabase_key = supabase_key or settings.SUPABASE_SERVICE_ROLE_KEY
+        self.headers = {
+            "apikey": self.supabase_key,
+            "Authorization": f"Bearer {self.supabase_key}",
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal,resolution=merge-duplicates",
+        }
 
-    def add_documents(self, texts, embeddings, metadatas, ids):
-        raise NotImplementedError("Supabase pgvector migration is planned for future release.")
+    def add_documents(
+        self,
+        texts: List[str],
+        embeddings: List[List[float]],
+        metadatas: List[Dict[str, Any]],
+        ids: List[str],
+    ) -> None:
+        import httpx
+        rows = []
+        for text, emb, meta, doc_id in zip(texts, embeddings, metadatas, ids):
+            raw_doc_id = meta.get("document_id")
+            valid_doc_id = raw_doc_id if (raw_doc_id and "-" in str(raw_doc_id)) else None
+            raw_user_id = meta.get("user_id")
+            valid_user_id = raw_user_id if (raw_user_id and "-" in str(raw_user_id)) else "00000000-0000-0000-0000-000000000001"
+            rows.append({
+                "id": str(doc_id),
+                "document_id": valid_doc_id,
+                "user_id": valid_user_id,
+                "chunk_index": int(meta.get("chunk_index", 0)),
+                "text": text,
+                "embedding": emb,
+                "metadata": meta,
+            })
 
-    def query(self, query_embedding, user_id, top_k = 5, filters = None):
-        raise NotImplementedError("Supabase pgvector migration is planned for future release.")
+        if not rows:
+            return
 
-    def delete_document(self, user_id, document_id):
-        raise NotImplementedError("Supabase pgvector migration is planned for future release.")
+        try:
+            with httpx.Client(timeout=30.0) as client:
+                resp = client.post(
+                    f"{self.supabase_url}/rest/v1/document_chunks",
+                    headers=self.headers,
+                    json=rows,
+                )
+                if resp.status_code >= 400:
+                    print(f"[SupabaseVectorStore] Failed to insert document chunks: {resp.text}")
+        except Exception as e:
+            print(f"[SupabaseVectorStore] Error inserting document chunks: {e}")
 
-    def count_user_chunks(self, user_id):
-        raise NotImplementedError("Supabase pgvector migration is planned for future release.")
+    def query(
+        self,
+        query_embedding: List[float],
+        user_id: str,
+        top_k: int = 5,
+        filters: Optional[Dict[str, Any]] = None,
+    ) -> List[Dict[str, Any]]:
+        import httpx
+        payload = {
+            "query_embedding": query_embedding,
+            "match_count": top_k,
+            "filter_user_id": user_id if (user_id and "-" in str(user_id)) else None,
+            "filter_subject": filters.get("subject") if filters else None,
+            "filter_chapter": filters.get("chapter") if filters else None,
+        }
+
+        try:
+            with httpx.Client(timeout=30.0) as client:
+                resp = client.post(
+                    f"{self.supabase_url}/rest/v1/rpc/match_document_chunks",
+                    headers=self.headers,
+                    json=payload,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    hits = []
+                    for item in data:
+                        hits.append({
+                            "text": item.get("text", ""),
+                            "metadata": item.get("metadata", {}),
+                            "score": round(float(item.get("similarity", 0.85)), 4),
+                        })
+                    return hits
+                else:
+                    print(f"[SupabaseVectorStore] RPC query failed: {resp.text}")
+                    return []
+        except Exception as e:
+            print(f"[SupabaseVectorStore] Error executing query: {e}")
+            return []
+
+    def delete_document(self, user_id: str, document_id: str) -> None:
+        import httpx
+        try:
+            with httpx.Client(timeout=15.0) as client:
+                client.delete(
+                    f"{self.supabase_url}/rest/v1/document_chunks?user_id=eq.{user_id}&document_id=eq.{document_id}",
+                    headers=self.headers,
+                )
+        except Exception as e:
+            print(f"[SupabaseVectorStore] Error deleting document: {e}")
+
+    def count_user_chunks(self, user_id: str) -> int:
+        import httpx
+        try:
+            headers = {**self.headers, "Prefer": "count=exact"}
+            with httpx.Client(timeout=15.0) as client:
+                resp = client.get(
+                    f"{self.supabase_url}/rest/v1/document_chunks?user_id=eq.{user_id}&select=id",
+                    headers=headers,
+                )
+                content_range = resp.headers.get("content-range", "")
+                if "/" in content_range:
+                    try:
+                        return int(content_range.split("/")[1])
+                    except Exception:
+                        pass
+                return len(resp.json()) if resp.status_code == 200 else 0
+        except Exception as e:
+            print(f"[SupabaseVectorStore] Error counting chunks: {e}")
+            return 0

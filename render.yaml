@@ -1,0 +1,60 @@
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Python FastAPI RAG Microservice (Gemini AI + pgvector)
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: espark-rag-server
+    runtime: python
+    rootDir: rag-server
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ENVIRONMENT
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
+  # ----------------------------------------------------------------------------
+  # 2. Node.js Express Backend API
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: espark-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: RAG_SERVER_URL
+        fromService:
+          type: web
+          name: espark-rag-server
+          property: host
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+

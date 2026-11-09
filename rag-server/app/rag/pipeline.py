@@ -3,8 +3,30 @@ from pathlib import Path
 from app.rag.document_loader import PDFDocumentLoader
 from app.rag.chunker import TextChunker
 from app.embeddings.generator import EmbeddingGenerator
-from app.core.vector_store import VectorStore, ChromaVectorStore
+from app.core.vector_store import VectorStore, ChromaVectorStore, SupabaseVectorStore
 from app.core.config import settings
+
+
+def _create_default_vector_store() -> VectorStore:
+    # If Supabase URL and service key are provided, use pgvector for persistent cloud storage
+    if (
+        settings.SUPABASE_URL
+        and "placeholder" not in settings.SUPABASE_URL
+        and settings.SUPABASE_SERVICE_ROLE_KEY
+        and "your-supabase" not in settings.SUPABASE_SERVICE_ROLE_KEY
+    ):
+        try:
+            return SupabaseVectorStore(
+                supabase_url=settings.SUPABASE_URL,
+                supabase_key=settings.SUPABASE_SERVICE_ROLE_KEY,
+            )
+        except Exception as e:
+            print(f"[RAGPipeline] SupabaseVectorStore init failed, falling back to Chroma: {e}")
+
+    return ChromaVectorStore(
+        persist_directory=settings.CHROMA_PATH,
+        collection_name=settings.COLLECTION_NAME,
+    )
 
 
 class RAGPipeline:
@@ -16,10 +38,7 @@ class RAGPipeline:
         self.loader = PDFDocumentLoader()
         self.chunker = TextChunker()
         self.embedder = EmbeddingGenerator()
-        self.vector_store = vector_store or ChromaVectorStore(
-            persist_directory=settings.CHROMA_PATH,
-            collection_name=settings.COLLECTION_NAME
-        )
+        self.vector_store = vector_store or _create_default_vector_store()
 
     def ingest_pdf_file(
         self,

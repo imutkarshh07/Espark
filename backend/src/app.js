@@ -14,25 +14,34 @@ const app = express();
 app.use(helmet());
 
 // Cross-Origin Resource Sharing with strict origins
+const configuredOrigins = (config.corsOrigin && config.corsOrigin !== '*')
+  ? config.corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
+  : [];
+
 const allowedOrigins = [
   config.frontendUrl,
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
-];
+  ...configuredOrigins,
+].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
-      if (
-        config.corsOrigin === '*' ||
-        allowedOrigins.indexOf(origin) !== -1 ||
-        config.env === 'development'
-      ) {
+
+      // In non-production or if wildcard explicitly configured outside production
+      if (config.env !== 'production' && (config.corsOrigin === '*' || !config.corsOrigin)) {
         return callback(null, true);
       }
+
+      // Production check against allowed origins
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      }
+
       return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
     },
     credentials: true,

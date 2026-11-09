@@ -38,7 +38,7 @@ const getBackendBaseUrl = (): string => {
 
   // If connected via Metro (Expo Go on physical phone), use the live Metro IP
   if (detectedIp) {
-    return `http://${detectedIp}:5000/api`;
+    return `http://${detectedIp}:5001/api`;
   }
 
   // 2. If explicit EXPO_PUBLIC_API_URL is provided, use it
@@ -54,13 +54,13 @@ const getBackendBaseUrl = (): string => {
   if (Platform.OS === 'android') {
     // On physical phone (e.g. installed preview APK), 10.0.2.2 is unreachable, so use LAN IP
     if (Constants.isDevice) {
-      return `http://${DEV_LAN_IP}:5000/api`;
+      return `http://${DEV_LAN_IP}:5001/api`;
     }
-    return 'http://10.0.2.2:5000/api';
+    return 'http://10.0.2.2:5001/api';
   }
 
   // 4. iOS Simulator & Web fallback
-  return 'http://localhost:5000/api';
+  return 'http://localhost:5001/api';
 };
 
 export const API_BASE_URL = getBackendBaseUrl();

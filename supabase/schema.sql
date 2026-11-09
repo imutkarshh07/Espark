@@ -351,3 +351,79 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- ==============================================================================
+-- 10. VECTOR EMBEDDINGS (SUPABASE PGVECTOR FOR RAG PERSISTENCE)
+-- ==============================================================================
+-- Enable pgvector extension for cloud vector search
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Document chunks table storing chunk text, metadata, and 384-dimensional dense vectors
+CREATE TABLE IF NOT EXISTS public.document_chunks (
+    id TEXT PRIMARY KEY,
+    document_id UUID REFERENCES public.documents(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+    chunk_index INT NOT NULL DEFAULT 0,
+    text TEXT NOT NULL,
+    embedding vector(384),
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for performance and isolation
+CREATE INDEX IF NOT EXISTS idx_document_chunks_user ON public.document_chunks(user_id);
+CREATE INDEX IF NOT EXISTS idx_document_chunks_doc ON public.document_chunks(document_id);
+
+-- Row Level Security (RLS) for tenant isolation
+ALTER TABLE public.document_chunks ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view their own document chunks" ON public.document_chunks;
+CREATE POLICY "Users can view their own document chunks"
+    ON public.document_chunks FOR SELECT
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert their own document chunks" ON public.document_chunks;
+CREATE POLICY "Users can insert their own document chunks"
+    ON public.document_chunks FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete their own document chunks" ON public.document_chunks;
+CREATE POLICY "Users can delete their own document chunks"
+    ON public.document_chunks FOR DELETE
+    USING (auth.uid() = user_id);
+
+-- Match document chunks function for cosine similarity retrieval
+CREATE OR REPLACE FUNCTION match_document_chunks(
+    query_embedding vector(384),
+    match_count INT DEFAULT 5,
+    filter_user_id UUID DEFAULT NULL,
+    filter_subject TEXT DEFAULT NULL,
+    filter_chapter TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+    id TEXT,
+    document_id UUID,
+    user_id UUID,
+    text TEXT,
+    metadata JSONB,
+    similarity FLOAT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        dc.id,
+        dc.document_id,
+        dc.user_id,
+        dc.text,
+        dc.metadata,
+        1 - (dc.embedding <=> query_embedding) AS similarity
+    FROM public.document_chunks dc
+    WHERE (filter_user_id IS NULL OR dc.user_id = filter_user_id)
+      AND (filter_subject IS NULL OR (dc.metadata->>'subject') = filter_subject OR filter_subject = 'General')
+      AND (filter_chapter IS NULL OR (dc.metadata->>'chapter') = filter_chapter OR filter_chapter = 'General')
+    ORDER BY dc.embedding <=> query_embedding
+    LIMIT match_count;
+END;
+$$;

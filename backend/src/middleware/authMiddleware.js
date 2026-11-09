@@ -21,6 +21,8 @@ const defaultGuestUser = {
 const resolveTokenUser = async (token) => {
   if (!token) return null;
 
+  const isDevOrTest = config.env === 'development' || config.env === 'test';
+
   // 1. Mock tokens in test environment
   if (config.env === 'test' && token.startsWith('mock-token-')) {
     const mockUserId = token.replace('mock-token-', '');
@@ -33,13 +35,13 @@ const resolveTokenUser = async (token) => {
     };
   }
 
-  // 2. Explicit demo token bypass for guest preview
-  if (token === 'demo-student-token' || token === 'guest' || token.startsWith('demo-')) {
+  // 2. Explicit demo token bypass for guest preview (restricted to development/test only)
+  if (isDevOrTest && (token === 'demo-student-token' || token === 'guest' || token.startsWith('demo-'))) {
     return { ...defaultGuestUser };
   }
 
-  // 3. User offline / auto-confirmed session tokens
-  if (token.startsWith('user-token-')) {
+  // 3. User offline / auto-confirmed session tokens (restricted to development/test only)
+  if (isDevOrTest && token.startsWith('user-token-')) {
     const userId = token.replace('user-token-', '');
     return {
       id: userId || defaultGuestUser.id,

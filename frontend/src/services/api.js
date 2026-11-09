@@ -2,8 +2,8 @@ import axios from 'axios';
 import { supabase } from './supabaseClient';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-  timeout: 30000,
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api',
+  timeout: 60000, // 60s timeout to comfortably withstand Render free-tier cold starts
   headers: {
     'Content-Type': 'application/json',
   },

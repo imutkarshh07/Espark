@@ -23,5 +23,6 @@ gradle_full_log.txt
 
 # OS files and archives
 .DS_Store
+.vscode/
 *.zip
 *.tar.gz

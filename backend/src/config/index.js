@@ -1,9 +1,14 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+const isProduction = (process.env.NODE_ENV || 'development') === 'production';
+
+// In production, require deliberate origins (or comma-separated list); only default to * in dev/test
+const defaultCorsOrigin = isProduction ? (process.env.FRONTEND_URL || '') : '*';
+
 const config = {
   env: process.env.NODE_ENV || 'development',
-  port: parseInt(process.env.PORT || '5000', 10),
+  port: parseInt(process.env.PORT || '5001', 10),
   supabase: {
     url: process.env.SUPABASE_URL || '',
     publishableKey: process.env.SUPABASE_PUBLISHABLE_KEY || '',
@@ -11,7 +16,7 @@ const config = {
   },
   ragServerUrl: process.env.RAG_SERVER_URL || 'http://127.0.0.1:8000',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
-  corsOrigin: process.env.CORS_ORIGIN || '*',
+  corsOrigin: process.env.CORS_ORIGIN || defaultCorsOrigin,
   jwtSecret: process.env.JWT_SECRET || '',
 };
 
