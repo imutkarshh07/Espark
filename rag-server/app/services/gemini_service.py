@@ -249,15 +249,14 @@ Respond ONLY with valid JSON in this exact structure:
         return all_questions[:requested]
 
     def _get_models_to_try(self) -> List[str]:
-        # Fast, robust model rotation with instant fallbacks to available models
-        models = [self.model, "gemini-flash-latest", "gemini-3.8-flash", "gemini-3-flash-preview", "gemini-2.5-flash-lite"]
-        seen = set()
-        deduped = []
-        for m in models:
-            if m and m not in seen:
-                seen.add(m)
-                deduped.append(m)
-        return deduped
+        models = [
+            self.model,
+            "gemini-3.8-flash",
+            "gemini-3.6-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-3.1-flash-lite",
+        ]
+        return list(dict.fromkeys(model for model in models if model))
 
     @staticmethod
     def _provider_status(error: Exception) -> Optional[int]:
@@ -299,45 +298,53 @@ Respond ONLY with valid JSON in this exact structure:
         )
 
     def _generate_doubt_content(self, contents: List[Any]) -> Any:
-        for attempt in range(1, GEMINI_MAX_ATTEMPTS + 1):
-            started_at = time.monotonic()
-            try:
-                response = self._client.models.generate_content(
-                    model=self.model,
-                    contents=contents,
-                )
-                latency_ms = int((time.monotonic() - started_at) * 1000)
-                logger.info(
-                    "Gemini doubt request succeeded model=%s attempt=%s latency_ms=%s",
-                    self.model,
-                    attempt,
-                    latency_ms,
-                )
-                return response
-            except Exception as error:
-                latency_ms = int((time.monotonic() - started_at) * 1000)
-                status = self._provider_status(error)
-                category = self._provider_error(error).code
-                retryable = self._is_retryable_provider_error(error)
-                logger.warning(
-                    "Gemini doubt request failed model=%s attempt=%s status=%s category=%s latency_ms=%s retryable=%s",
-                    self.model,
-                    attempt,
-                    status if status is not None else "unknown",
-                    category,
-                    latency_ms,
-                    retryable,
-                )
-                if not retryable or attempt == GEMINI_MAX_ATTEMPTS:
-                    raise self._provider_error(error) from error
+        last_model_error = None
+        for model_name in self._get_models_to_try():
+            for attempt in range(1, GEMINI_MAX_ATTEMPTS + 1):
+                started_at = time.monotonic()
+                try:
+                    response = self._client.models.generate_content(
+                        model=model_name,
+                        contents=contents,
+                    )
+                    latency_ms = int((time.monotonic() - started_at) * 1000)
+                    logger.info(
+                        "Gemini doubt request succeeded model=%s attempt=%s latency_ms=%s",
+                        model_name,
+                        attempt,
+                        latency_ms,
+                    )
+                    return response
+                except Exception as error:
+                    latency_ms = int((time.monotonic() - started_at) * 1000)
+                    status = self._provider_status(error)
+                    category = self._provider_error(error).code
+                    retryable = self._is_retryable_provider_error(error)
+                    logger.warning(
+                        "Gemini doubt request failed model=%s attempt=%s status=%s category=%s latency_ms=%s retryable=%s",
+                        model_name,
+                        attempt,
+                        status if status is not None else "unknown",
+                        category,
+                        latency_ms,
+                        retryable,
+                    )
+                    if status == 404:
+                        last_model_error = error
+                        logger.info("Gemini model unavailable; moving to the next fallback after model=%s", model_name)
+                        break
+                    if not retryable or attempt == GEMINI_MAX_ATTEMPTS:
+                        raise self._provider_error(error) from error
 
-                delay = min(
-                    GEMINI_RETRY_BASE_DELAY_SECONDS * (2 ** (attempt - 1)),
-                    GEMINI_RETRY_MAX_DELAY_SECONDS,
-                )
-                time.sleep(delay + random.uniform(0, delay * 0.2))
+                    delay = min(
+                        GEMINI_RETRY_BASE_DELAY_SECONDS * (2 ** (attempt - 1)),
+                        GEMINI_RETRY_MAX_DELAY_SECONDS,
+                    )
+                    time.sleep(delay + random.uniform(0, delay * 0.2))
 
-        raise RuntimeError("Gemini retry loop completed without a response")
+        if last_model_error is not None:
+            raise self._provider_error(last_model_error) from last_model_error
+        raise RuntimeError("Gemini doubt generation completed without a response or provider error")
 
 
 

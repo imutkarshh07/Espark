@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import patch
 from app.core.vector_store import ChromaVectorStore
@@ -64,6 +65,44 @@ class TestRAGMicroservice(unittest.TestCase):
         self.assertIn("practice_questions", result)
         self.assertTrue(len(result["practice_questions"]) > 0)
 
+    def test_quiz_generation_still_uses_configured_model(self):
+        service = GeminiService(model="gemini-test-configured")
+        generated_question = {
+            "question_text": "Which process moves water across a selectively permeable membrane?",
+            "options": ["Osmosis", "Diffusion", "Active transport", "Filtration"],
+            "correct_answer": "Osmosis",
+            "explanation": "Osmosis is the movement of water across a selectively permeable membrane.",
+            "subject": "Biology",
+            "chapter": "Cell Transport",
+        }
+
+        class FakeModels:
+            calls = []
+
+            def generate_content(self, **kwargs):
+                self.calls.append(kwargs)
+                return type("Response", (), {
+                    "text": json.dumps({"questions": [generated_question]})
+                })()
+
+        class FakeClient:
+            models = FakeModels()
+
+        service._client = FakeClient()
+        questions = service.generate_quiz_questions(
+            exam="NEET",
+            class_level="12",
+            subjects=["Biology"],
+            chapters={"Biology": "Cell Transport"},
+            subtopic=None,
+            difficulty="easy",
+            count=1,
+        )
+
+        self.assertEqual(len(questions), 1)
+        self.assertEqual(questions[0]["correct_answer"], "Osmosis")
+        self.assertEqual(service._client.models.calls[0]["model"], "gemini-test-configured")
+
     def test_solve_doubt(self):
         service = GeminiService()
         class FakeModels:
@@ -117,16 +156,18 @@ class TestRAGMicroservice(unittest.TestCase):
         self.assertEqual(raised.exception.code, "AI_PROVIDER_TIMEOUT")
 
     def test_doubt_retries_transient_provider_error_then_succeeds(self):
-        service = GeminiService()
+        service = GeminiService(model="gemini-test-configured")
 
         class ProviderError(Exception):
             code = 503
 
         class FakeModels:
             calls = 0
+            models_used = []
 
             def generate_content(self, model, contents):
                 self.calls += 1
+                self.models_used.append(model)
                 if self.calls == 1:
                     raise ProviderError("temporarily unavailable")
                 return "generated response"
@@ -140,6 +181,127 @@ class TestRAGMicroservice(unittest.TestCase):
 
         self.assertEqual(response, "generated response")
         self.assertEqual(service._client.models.calls, 2)
+        self.assertEqual(
+            service._client.models.models_used,
+            ["gemini-test-configured", "gemini-test-configured"],
+        )
+
+    def test_model_fallback_list_contains_only_supported_multimodal_flash_models(self):
+        service = GeminiService(model="gemini-test-configured")
+
+        self.assertEqual(
+            service._get_models_to_try(),
+            [
+                "gemini-test-configured",
+                "gemini-3.8-flash",
+                "gemini-3.6-flash",
+                "gemini-3.5-flash-lite",
+                "gemini-3.1-flash-lite",
+            ],
+        )
+        self.assertEqual(
+            GeminiService(model="gemini-3.8-flash")._get_models_to_try(),
+            [
+                "gemini-3.8-flash",
+                "gemini-3.6-flash",
+                "gemini-3.5-flash-lite",
+                "gemini-3.1-flash-lite",
+            ],
+        )
+
+    def test_doubt_switches_models_on_not_found_without_retrying_missing_model(self):
+        service = GeminiService(model="gemini-test-missing")
+
+        class ModelNotFoundError(Exception):
+            code = 404
+
+        class FakeModels:
+            models_used = []
+
+            def generate_content(self, model, contents):
+                self.models_used.append(model)
+                if model == "gemini-test-missing":
+                    raise ModelNotFoundError("model not found")
+                return "fallback response"
+
+        class FakeClient:
+            models = FakeModels()
+
+        service._client = FakeClient()
+        response = service._generate_doubt_content(["question"])
+
+        self.assertEqual(response, "fallback response")
+        self.assertEqual(
+            service._client.models.models_used,
+            ["gemini-test-missing", "gemini-3.8-flash"],
+        )
+
+    def test_doubt_model_fallback_preserves_image_and_pdf_attachments(self):
+        class ModelNotFoundError(Exception):
+            code = 404
+
+        for mime_type, file_bytes in (
+            ("image/png", b"image bytes"),
+            ("application/pdf", b"%PDF-1.4"),
+        ):
+            with self.subTest(mime_type=mime_type):
+                service = GeminiService(model="gemini-test-missing")
+
+                class FakeModels:
+                    calls = []
+
+                    def generate_content(self, model, contents):
+                        self.calls.append((model, contents))
+                        if model == "gemini-test-missing":
+                            raise ModelNotFoundError("model not found")
+                        return type("Response", (), {
+                            "text": json.dumps({
+                                "answer": "Generated attachment explanation.",
+                                "key_takeaways": [],
+                                "suggested_followups": [],
+                                "confidence": 0.9,
+                            })
+                        })()
+
+                class FakeClient:
+                    models = FakeModels()
+
+                service._client = FakeClient()
+                result = service.solve_doubt(
+                    query="Explain this attachment",
+                    file_bytes=file_bytes,
+                    file_mime_type=mime_type,
+                )
+
+                self.assertIn("Generated attachment explanation", result["answer"])
+                self.assertEqual(len(service._client.models.calls), 2)
+                fallback_contents = service._client.models.calls[1][1]
+                self.assertEqual(fallback_contents[1].inline_data.mime_type, mime_type)
+                self.assertEqual(fallback_contents[1].inline_data.data, file_bytes)
+
+    def test_doubt_tries_next_model_after_each_model_returns_not_found(self):
+        service = GeminiService(model="gemini-test-missing")
+
+        class ModelNotFoundError(Exception):
+            code = 404
+
+        class FakeModels:
+            models_used = []
+
+            def generate_content(self, model, contents):
+                self.models_used.append(model)
+                raise ModelNotFoundError("model not found")
+
+        class FakeClient:
+            models = FakeModels()
+
+        service._client = FakeClient()
+        with self.assertRaises(GeminiServiceError) as raised:
+            service._generate_doubt_content(["question"])
+
+        self.assertEqual(raised.exception.status_code, 503)
+        self.assertEqual(raised.exception.code, "AI_MODEL_UNAVAILABLE")
+        self.assertEqual(service._client.models.models_used, service._get_models_to_try())
 
     def test_doubt_does_not_retry_invalid_provider_request(self):
         service = GeminiService()
