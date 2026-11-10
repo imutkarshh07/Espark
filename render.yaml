@@ -18,7 +18,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-1.5-flash
+        value: gemini-3.8-flash
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
@@ -41,10 +41,7 @@ services:
       - key: PORT
         value: 10000
       - key: RAG_SERVER_URL
-        fromService:
-          type: web
-          name: espark-rag-server
-          property: host
+        sync: false
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_PUBLISHABLE_KEY
