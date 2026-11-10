@@ -6,7 +6,7 @@ class RAGService {
   constructor() {
     this.client = axios.create({
       baseURL: config.ragServerUrl,
-      timeout: 60000, // 60s default timeout for AI operations
+      timeout: 60000,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -165,18 +165,42 @@ class RAGService {
         file_content: fileContent,
         file_name: fileName,
         file_type: fileType,
-      });
+      }, { timeout: 110000 });
       return response.data;
     } catch (err) {
-      const isConnRefused = err.code === 'ECONNREFUSED' || err.message?.includes('ECONNREFUSED');
-      logger.error('[RAGService] askDoubt failed:', err.response?.data || err.message);
-      const customErr = new Error(
-        isConnRefused
-          ? 'Python RAG microservice is offline on port 8000. Please start the RAG server.'
-          : (err.response?.data?.detail || err.message || 'AI Doubt Solver failed')
-      );
-      customErr.statusCode = isConnRefused ? 503 : (err.response?.status || 500);
-      customErr.code = isConnRefused ? 'RAG_SERVER_OFFLINE' : 'DOUBT_SOLVER_FAILED';
+      const upstreamStatus = err.response?.status;
+      const upstreamDetail = err.response?.data?.detail;
+      const upstreamCode = typeof upstreamDetail === 'object' ? upstreamDetail.code : null;
+      const isTimeout = err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT';
+      const isUnavailable = !err.response || upstreamStatus === 502 || upstreamStatus === 503;
+      const statusCode = isTimeout ? 504 : upstreamStatus === 429 ? 503 : upstreamStatus || 503;
+      const code = isTimeout
+        ? 'AI_PROVIDER_TIMEOUT'
+        : upstreamCode || (upstreamStatus === 429
+          ? 'AI_PROVIDER_RATE_LIMITED'
+          : isUnavailable ? 'AI_SERVICE_UNAVAILABLE' : 'AI_PROVIDER_ERROR');
+      const message = isTimeout
+        ? 'The AI service took too long to respond. Please try again.'
+        : upstreamStatus === 429
+          ? 'The AI service is busy. Please try again shortly.'
+        : upstreamCode && typeof upstreamDetail.message === 'string'
+          ? upstreamDetail.message
+          : upstreamStatus === 502
+            ? 'The AI service gateway is temporarily unavailable. Please try again.'
+            : upstreamStatus === 503 || !err.response
+              ? 'The AI service is temporarily unavailable. Please try again.'
+              : upstreamStatus === 504
+                ? 'The AI service took too long to respond. Please try again.'
+                : 'The AI service could not complete this request. Please try again.';
+
+      logger.error('[RAGService] askDoubt failed:', {
+        status: upstreamStatus || null,
+        code: err.code || null,
+        upstreamCode,
+      });
+      const customErr = new Error(message);
+      customErr.statusCode = statusCode;
+      customErr.code = code;
       throw customErr;
     }
   }

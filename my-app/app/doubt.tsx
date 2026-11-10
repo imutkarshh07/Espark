@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -52,6 +52,44 @@ interface SolvedDoubt {
   timestamp: string;
 }
 
+interface DoubtSubmission {
+  query: string;
+  subject: string;
+  chapter: string;
+  attachedFile: AttachedFile | null;
+}
+
+function getDoubtErrorMessage(error: any): string {
+  const status = error?.status;
+  const code = error?.code;
+
+  if (status === 502 || code === 'AI_PROVIDER_INVALID_RESPONSE') {
+    return 'The AI service gateway is temporarily unavailable. Your question and attachment are saved; please retry shortly.';
+  }
+  if (status === 429 || code === 'AI_PROVIDER_RATE_LIMITED') {
+    return 'The AI service is busy. Please wait a moment and retry.';
+  }
+  if (status === 503 || code === 'AI_PROVIDER_NOT_CONFIGURED' || code === 'AI_PROVIDER_CONFIGURATION') {
+    return 'The AI service is temporarily unavailable. Your question and attachment are saved; please retry shortly.';
+  }
+  if (status === 504 || code === 'AI_PROVIDER_TIMEOUT') {
+    return 'The AI service took too long to respond. Your question and attachment are saved; please retry.';
+  }
+  if (status === 413) {
+    return 'The attachment is too large. Please choose a file smaller than 10 MB.';
+  }
+  if (status === 415 || status === 400 || status === 422) {
+    return error?.message || 'Please check your question and attachment, then try again.';
+  }
+  if (error?.isNetworkError || !status) {
+    return 'Could not reach ESpark. Check your internet connection and retry.';
+  }
+  if (status >= 500) {
+    return 'ESpark could not complete the request. Your question and attachment are saved; please retry.';
+  }
+  return error?.message || 'Could not solve the doubt. Please try again.';
+}
+
 export function formatCleanText(text: string): string {
   if (!text) return '';
   return text
@@ -75,6 +113,8 @@ export default function DoubtSolverScreen() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [history, setHistory] = useState<SolvedDoubt[]>([]);
+  const isSubmittingRef = useRef(false);
+  const retrySubmissionRef = useRef<DoubtSubmission | null>(null);
 
   const handlePickImage = async (useCamera: boolean = false) => {
     try {
@@ -196,52 +236,73 @@ export default function DoubtSolverScreen() {
     setAttachedFile(null);
   };
 
-  const handleSubmit = async (overrideQuery?: string) => {
-    const doubtText = (overrideQuery || query).trim();
-    if (!doubtText && !attachedFile) {
+  const handleSubmit = async (overrideQuery?: string, retrySubmission?: DoubtSubmission | null) => {
+    if (isSubmittingRef.current) return;
+
+    const submission = retrySubmission || {
+      query: overrideQuery ?? query,
+      subject,
+      chapter,
+      attachedFile,
+    };
+    const doubtText = submission.query.trim();
+    if (!doubtText && !submission.attachedFile) {
       setErrorMessage('Please type a question or attach an image / PDF before asking.');
       return;
     }
 
+    isSubmittingRef.current = true;
+    retrySubmissionRef.current = submission;
     setErrorMessage(null);
     setLoading(true);
 
     try {
-      const activeSubject = subject === 'Auto-Detect' ? 'General' : subject;
-      const activeChapter = chapter || 'General';
-      const promptQuery = doubtText || (attachedFile ? 'Please analyze the attached image/document in detail, extract the question or diagram, and provide a comprehensive step-by-step academic solution with all intermediate formulas and principles.' : '');
+      const activeSubject = submission.subject;
+      const activeChapter = submission.chapter || 'General';
+      const promptQuery = doubtText || (submission.attachedFile ? 'Please analyze the attached image/document in detail, extract the question or diagram, and provide a comprehensive step-by-step academic solution with all intermediate formulas and principles.' : '');
 
       const response = await studyService.askAIDoubt({
         query: promptQuery,
         subject: activeSubject,
         chapter: activeChapter,
-        fileContent: attachedFile?.base64 || null,
-        fileName: attachedFile?.name || null,
-        fileType: attachedFile?.mimeType || null,
+        fileContent: submission.attachedFile?.base64 || null,
+        fileName: submission.attachedFile?.name || null,
+        fileType: submission.attachedFile?.mimeType || null,
       });
 
       const data = response?.data || response;
+      if (typeof data?.answer !== 'string' || !data.answer.trim()) {
+        throw { code: 'AI_PROVIDER_INVALID_RESPONSE', status: 502 };
+      }
       const newDoubt: SolvedDoubt = {
         id: `dbt-${Date.now()}`,
-        query: doubtText || `[Attached ${attachedFile?.type?.toUpperCase()}] ${attachedFile?.name}`,
+        query: doubtText || `[Attached ${submission.attachedFile?.type?.toUpperCase()}] ${submission.attachedFile?.name}`,
         subject: activeSubject,
         chapter: activeChapter,
-        answer: formatCleanText(data.answer || 'Solution evaluated based on standard exam curriculum principles.'),
-        fileName: attachedFile?.name,
-        fileType: attachedFile?.type,
-        keyTakeaways: (data.key_takeaways || []).map((k: string) => formatCleanText(k)),
-        suggestedFollowups: (data.suggested_followups || []).map((f: string) => formatCleanText(f)),
-        sources: data.sources || [],
+        answer: formatCleanText(data.answer),
+        fileName: submission.attachedFile?.name,
+        fileType: submission.attachedFile?.type,
+        keyTakeaways: Array.isArray(data.key_takeaways)
+          ? data.key_takeaways.map((k: string) => formatCleanText(k))
+          : [],
+        suggestedFollowups: Array.isArray(data.suggested_followups)
+          ? data.suggested_followups.map((f: string) => formatCleanText(f))
+          : [],
+        sources: Array.isArray(data.sources) ? data.sources : [],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
       setHistory((prev) => [newDoubt, ...prev]);
-      setQuery('');
-      setAttachedFile(null);
+      retrySubmissionRef.current = null;
+      if (query === submission.query && attachedFile === submission.attachedFile) {
+        setQuery('');
+        setAttachedFile(null);
+      }
     } catch (err: any) {
       console.warn('[DoubtSolver] Failed to solve doubt:', err);
-      setErrorMessage(err.message || 'Could not connect to AI Doubt Solver. Tap Retry to try again.');
+      setErrorMessage(getDoubtErrorMessage(err));
     } finally {
+      isSubmittingRef.current = false;
       setLoading(false);
     }
   };
@@ -463,7 +524,11 @@ export default function DoubtSolverScreen() {
                   </TouchableOpacity>
                 )}
               </View>
-              <TouchableOpacity onPress={() => handleSubmit()} style={styles.retryBtn}>
+              <TouchableOpacity
+                onPress={() => handleSubmit(undefined, retrySubmissionRef.current)}
+                style={styles.retryBtn}
+                disabled={loading}
+              >
                 <Text style={[styles.retryBtnText, { color: colors.error }]}>Retry</Text>
               </TouchableOpacity>
             </View>

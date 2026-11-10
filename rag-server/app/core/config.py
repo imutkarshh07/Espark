@@ -17,7 +17,7 @@ try:
 
         # Gemini API
         GEMINI_API_KEY: str = ""
-        GEMINI_MODEL: str = "gemini-flash-latest"
+        GEMINI_MODEL: str = "gemini-3.8-flash"
 
         # Supabase
         SUPABASE_URL: str = ""

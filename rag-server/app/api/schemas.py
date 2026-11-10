@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class PracticeQuestion(BaseModel):
@@ -100,19 +100,33 @@ class RAGQueryResponse(BaseModel):
 
 class DoubtSolverRequest(BaseModel):
     user_id: str = Field(min_length=1)
-    query: Optional[str] = "Please analyze and solve the question or diagram depicted here."
-    subject: Optional[str] = "General"
-    chapter: Optional[str] = "General"
-    file_content: Optional[str] = None  # Text or base64 data
-    file_name: Optional[str] = None
-    file_type: Optional[str] = None  # pdf, txt, md, image/png, image/jpeg
+    query: Optional[str] = Field(default=None, max_length=4000)
+    subject: Optional[str] = Field(default="General", min_length=1, max_length=80)
+    chapter: Optional[str] = Field(default="General", min_length=1, max_length=120)
+    file_content: Optional[str] = Field(default=None, max_length=14 * 1024 * 1024)
+    file_name: Optional[str] = Field(default=None, max_length=255)
+    file_type: Optional[str] = None
 
     @field_validator('query', mode='before')
     @classmethod
-    def default_query_if_empty(cls, v: Any) -> str:
+    def normalize_query(cls, v: Any) -> Optional[str]:
         if v is None or (isinstance(v, str) and not v.strip()):
-            return "Please analyze and solve the question or diagram depicted here."
+            return None
         return str(v).strip()
+
+    @field_validator('file_type')
+    @classmethod
+    def validate_file_type(cls, v: Optional[str]) -> Optional[str]:
+        allowed_types = {'image/jpeg', 'image/png', 'image/webp', 'application/pdf'}
+        if v and v not in allowed_types:
+            raise ValueError('Unsupported attachment type.')
+        return v
+
+    @model_validator(mode='after')
+    def require_question_or_attachment(self):
+        if not self.query and not self.file_content:
+            raise ValueError('Enter a question or attach an image or PDF.')
+        return self
 
 
 class DoubtSolverResponse(BaseModel):
@@ -121,4 +135,3 @@ class DoubtSolverResponse(BaseModel):
     key_takeaways: List[str] = Field(default_factory=list)
     suggested_followups: List[str] = Field(default_factory=list)
     confidence: float = 0.90
-

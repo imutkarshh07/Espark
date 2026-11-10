@@ -1,4 +1,6 @@
 import base64
+import binascii
+import logging
 from fastapi import APIRouter, HTTPException, Depends
 from app.api.schemas import (
     ProcessDocumentRequest,
@@ -17,9 +19,10 @@ from app.api.schemas import (
 )
 from app.rag.pipeline import RAGPipeline
 from app.services.mistake_analyzer import MistakeAnalyzer
-from app.services.gemini_service import GeminiService
+from app.services.gemini_service import GeminiService, GeminiServiceError
 
 api_router = APIRouter(prefix="/rag", tags=["RAG Microservice"])
+logger = logging.getLogger(__name__)
 
 # Shared pipeline and analyzer singletons
 rag_pipeline = RAGPipeline()
@@ -152,7 +155,7 @@ def ask_doubt(request: DoubtSolverRequest):
             user_id=request.user_id,
             query=effective_query,
             top_k=4,
-            subject=request.subject if request.subject != "General" else None,
+            subject=request.subject if request.subject not in {"General", "Auto-Detect"} else None,
             chapter=request.chapter if request.chapter != "General" else None,
         )
         context_chunks = [h.get("text", "") for h in hits if h.get("text")]
@@ -167,21 +170,27 @@ def ask_doubt(request: DoubtSolverRequest):
             if "," in raw_content and "base64" in raw_content:
                 raw_content = raw_content.split(",", 1)[1]
             try:
-                decoded = base64.b64decode(raw_content)
-                if len(decoded) > 0:
-                    file_bytes = decoded
-                    if not file_mime_type and request.file_name:
-                        lower_name = request.file_name.lower()
-                        if lower_name.endswith((".jpg", ".jpeg")):
-                            file_mime_type = "image/jpeg"
-                        elif lower_name.endswith(".png"):
-                            file_mime_type = "image/png"
-                        elif lower_name.endswith(".webp"):
-                            file_mime_type = "image/webp"
-                        elif lower_name.endswith(".pdf"):
-                            file_mime_type = "application/pdf"
-            except Exception:
-                file_text = request.file_content[:5000]
+                decoded = base64.b64decode(raw_content, validate=True)
+            except (ValueError, binascii.Error) as err:
+                raise HTTPException(status_code=400, detail="Attachment data is not valid base64.") from err
+            if not decoded:
+                raise HTTPException(status_code=400, detail="The attached file is empty.")
+            if len(decoded) > 10 * 1024 * 1024:
+                raise HTTPException(status_code=413, detail="Attachments must be 10 MB or smaller.")
+
+            file_bytes = decoded
+            if not file_mime_type and request.file_name:
+                lower_name = request.file_name.lower()
+                if lower_name.endswith((".jpg", ".jpeg")):
+                    file_mime_type = "image/jpeg"
+                elif lower_name.endswith(".png"):
+                    file_mime_type = "image/png"
+                elif lower_name.endswith(".webp"):
+                    file_mime_type = "image/webp"
+                elif lower_name.endswith(".pdf"):
+                    file_mime_type = "application/pdf"
+            if file_mime_type not in {"image/jpeg", "image/png", "image/webp", "application/pdf"}:
+                raise HTTPException(status_code=415, detail="Attach a JPEG, PNG, WEBP image, or PDF.")
 
         if file_bytes and (file_mime_type == "application/pdf" or (request.file_name and request.file_name.lower().endswith(".pdf"))):
             try:
@@ -219,12 +228,19 @@ def ask_doubt(request: DoubtSolverRequest):
             )
 
         return DoubtSolverResponse(
-            answer=solution.get("answer", "Solution calculated based on standard principles."),
+            answer=solution["answer"],
             sources=sources,
             key_takeaways=solution.get("key_takeaways", []),
             suggested_followups=solution.get("suggested_followups", []),
             confidence=solution.get("confidence", 0.90),
         )
+    except GeminiServiceError as e:
+        raise HTTPException(
+            status_code=e.status_code,
+            detail={"code": e.code, "message": e.public_message},
+        ) from e
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Doubt solving failed: {str(e)}")
-
+        logger.exception("Doubt solving failed")
+        raise HTTPException(status_code=500, detail="Doubt solving failed. Please try again.") from e

@@ -27,6 +27,7 @@ def health_check():
         "version": settings.VERSION,
         "environment": settings.ENVIRONMENT,
         "model": settings.GEMINI_MODEL,
+        "gemini_key_configured": bool(settings.GEMINI_API_KEY),
         "vector_store": "ChromaDB",
     }
 

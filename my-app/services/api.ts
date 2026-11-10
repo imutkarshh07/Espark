@@ -123,8 +123,27 @@ api.interceptors.response.use(
         code: status >= 500 ? 'SERVER_ERROR' : 'REQUEST_FAILED',
         message: responseData?.message || error.message || 'Server error',
       };
+      const isRawAxiosMessage = /^Request failed with status code \d+$/.test(errorData.message || '');
+      const message = isRawAxiosMessage || !errorData.message
+        ? status === 502
+          ? 'The AI service gateway is temporarily unavailable. Please try again.'
+          : status === 503
+            ? 'The AI service is temporarily unavailable. Please try again.'
+            : status === 504
+              ? 'The AI service took too long to respond. Please try again.'
+              : status === 429
+                ? 'Too many requests. Please wait a moment and try again.'
+                : status === 413
+                  ? 'The attachment is too large. Please choose a file smaller than 10 MB.'
+                  : status >= 500
+                    ? 'The server could not complete this request. Please try again.'
+                    : status === 400 || status === 422
+                      ? 'Please check your question and attachment, then try again.'
+                      : 'The request could not be completed. Please try again.'
+        : errorData.message;
       return Promise.reject({
         ...errorData,
+        message,
         status,
         isNetworkError: false,
       });
@@ -133,7 +152,7 @@ api.interceptors.response.use(
     // 2. Timeout error
     if (error.code === 'ECONNABORTED' || error.message?.toLowerCase().includes('timeout')) {
       return Promise.reject({
-        code: 'TIMEOUT',
+        code: 'AI_PROVIDER_TIMEOUT',
         message: 'ESpark is taking too long to respond. Please try again.',
         isNetworkError: true,
       });
@@ -144,8 +163,10 @@ api.interceptors.response.use(
     return Promise.reject({
       code: isConnRefused ? 'BACKEND_UNREACHABLE' : 'NETWORK_ERROR',
       message: isConnRefused
-        ? `Unable to connect to ESpark backend at ${API_BASE_URL}. Ensure your phone is connected to the same Wi-Fi as your computer and backend is running.`
-        : error.message || 'Network error occurred.',
+        ? API_BASE_URL.startsWith('https://')
+          ? 'Unable to reach ESpark servers. Check your internet connection and try again.'
+          : `Unable to connect to ESpark backend at ${API_BASE_URL}. Ensure your phone and computer are connected to the same Wi-Fi and the backend is running.`
+        : 'A network error interrupted the request. Check your connection and try again.',
       isNetworkError: true,
     });
   }

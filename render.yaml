@@ -41,7 +41,7 @@ services:
       - key: PORT
         value: 10000
       - key: RAG_SERVER_URL
-        sync: false
+        value: https://espark-rag-server.onrender.com
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_PUBLISHABLE_KEY
@@ -54,4 +54,3 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
-

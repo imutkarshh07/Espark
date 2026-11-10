@@ -74,6 +74,25 @@ const ragQuerySchema = Joi.object({
   top_k: Joi.number().integer().min(1).max(10).default(5),
 });
 
+const ragAskDoubtSchema = Joi.object({
+  query: Joi.string().trim().max(4000).allow('', null).optional(),
+  subject: Joi.string().trim().min(1).max(80).optional(),
+  chapter: Joi.string().trim().min(1).max(120).optional(),
+  file_content: Joi.string().max(14 * 1024 * 1024).allow('', null).optional(),
+  file_name: Joi.string().max(255).allow('', null).optional(),
+  file_type: Joi.string()
+    .valid('image/jpeg', 'image/png', 'image/webp', 'application/pdf')
+    .allow('', null)
+    .optional(),
+}).custom((value, helpers) => {
+  if (!value.query?.trim() && !value.file_content) {
+    return helpers.error('any.custom', { message: 'Enter a question or attach an image or PDF.' });
+  }
+  return value;
+}).messages({
+  'any.custom': '{{#message}}',
+});
+
 module.exports = {
   validate,
   updateProfileSchema,
@@ -83,4 +102,5 @@ module.exports = {
   completeAttemptSchema,
   ragAnalyzeMistakeSchema,
   ragQuerySchema,
+  ragAskDoubtSchema,
 };

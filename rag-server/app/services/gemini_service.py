@@ -1,8 +1,26 @@
 import json
+import logging
 import re
 import random
+import time
 from typing import Dict, Any, List, Optional
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
+
+GEMINI_REQUEST_TIMEOUT_MS = 25000
+GEMINI_MAX_ATTEMPTS = 3
+GEMINI_RETRY_BASE_DELAY_SECONDS = 0.5
+GEMINI_RETRY_MAX_DELAY_SECONDS = 2.0
+RETRYABLE_PROVIDER_STATUSES = {408, 429, 500, 502, 503, 504}
+
+
+class GeminiServiceError(RuntimeError):
+    def __init__(self, status_code: int, code: str, public_message: str):
+        super().__init__(public_message)
+        self.status_code = status_code
+        self.code = code
+        self.public_message = public_message
 
 
 class GeminiService:
@@ -21,9 +39,17 @@ class GeminiService:
         if self.api_key:
             try:
                 from google import genai
-                self._client = genai.Client(api_key=self.api_key, http_options={"timeout": 60000})
+                from google.genai import types
+
+                self._client = genai.Client(
+                    api_key=self.api_key,
+                    http_options=types.HttpOptions(
+                        timeout=GEMINI_REQUEST_TIMEOUT_MS,
+                        retry_options=types.HttpRetryOptions(attempts=1),
+                    ),
+                )
             except Exception as e:
-                print(f"[GeminiService] Failed to initialize google-genai client: {e}")
+                logger.error("Gemini client initialization failed (%s)", type(e).__name__)
                 self._client = None
 
     def generate_quiz_questions(
@@ -233,6 +259,86 @@ Respond ONLY with valid JSON in this exact structure:
                 deduped.append(m)
         return deduped
 
+    @staticmethod
+    def _provider_status(error: Exception) -> Optional[int]:
+        status = getattr(error, "code", None) or getattr(error, "status_code", None)
+        try:
+            return int(status)
+        except (TypeError, ValueError):
+            return None
+
+    @classmethod
+    def _provider_error(cls, error: Exception) -> GeminiServiceError:
+        status = cls._provider_status(error)
+        if status == 400:
+            return GeminiServiceError(
+                400,
+                "AI_PROVIDER_INVALID_REQUEST",
+                "The AI service could not process this request. Please check the question or attachment.",
+            )
+        if status == 429:
+            return GeminiServiceError(503, "AI_PROVIDER_RATE_LIMITED", "The AI service is busy. Please try again shortly.")
+        if status in {401, 403}:
+            return GeminiServiceError(503, "AI_PROVIDER_CONFIGURATION", "The AI service is not configured correctly. Please contact support.")
+        if status == 404:
+            return GeminiServiceError(503, "AI_MODEL_UNAVAILABLE", "The configured AI model is unavailable. Please contact support.")
+        if status in {408, 504} or "timeout" in type(error).__name__.lower():
+            return GeminiServiceError(504, "AI_PROVIDER_TIMEOUT", "The AI service took too long to respond. Please try again.")
+        if status in {500, 502, 503}:
+            return GeminiServiceError(503, "AI_PROVIDER_UNAVAILABLE", "The AI service is temporarily unavailable. Please try again.")
+        return GeminiServiceError(502, "AI_PROVIDER_ERROR", "The AI service could not complete this request. Please try again.")
+
+    @classmethod
+    def _is_retryable_provider_error(cls, error: Exception) -> bool:
+        status = cls._provider_status(error)
+        if status is not None:
+            return status in RETRYABLE_PROVIDER_STATUSES
+        error_name = type(error).__name__.lower()
+        return isinstance(error, (TimeoutError, ConnectionError)) or any(
+            marker in error_name for marker in ("timeout", "network", "connection")
+        )
+
+    def _generate_doubt_content(self, contents: List[Any]) -> Any:
+        for attempt in range(1, GEMINI_MAX_ATTEMPTS + 1):
+            started_at = time.monotonic()
+            try:
+                response = self._client.models.generate_content(
+                    model=self.model,
+                    contents=contents,
+                )
+                latency_ms = int((time.monotonic() - started_at) * 1000)
+                logger.info(
+                    "Gemini doubt request succeeded model=%s attempt=%s latency_ms=%s",
+                    self.model,
+                    attempt,
+                    latency_ms,
+                )
+                return response
+            except Exception as error:
+                latency_ms = int((time.monotonic() - started_at) * 1000)
+                status = self._provider_status(error)
+                category = self._provider_error(error).code
+                retryable = self._is_retryable_provider_error(error)
+                logger.warning(
+                    "Gemini doubt request failed model=%s attempt=%s status=%s category=%s latency_ms=%s retryable=%s",
+                    self.model,
+                    attempt,
+                    status if status is not None else "unknown",
+                    category,
+                    latency_ms,
+                    retryable,
+                )
+                if not retryable or attempt == GEMINI_MAX_ATTEMPTS:
+                    raise self._provider_error(error) from error
+
+                delay = min(
+                    GEMINI_RETRY_BASE_DELAY_SECONDS * (2 ** (attempt - 1)),
+                    GEMINI_RETRY_MAX_DELAY_SECONDS,
+                )
+                time.sleep(delay + random.uniform(0, delay * 0.2))
+
+        raise RuntimeError("Gemini retry loop completed without a response")
+
 
 
     def analyze_mistake_with_context(
@@ -435,6 +541,13 @@ Respond ONLY with valid JSON in this exact structure:
         and any uploaded document text or file attachment (image/pdf).
         Minimizes symbols and removes asterisk clutter.
         """
+        if self._client is None:
+            raise GeminiServiceError(
+                503,
+                "AI_PROVIDER_NOT_CONFIGURED",
+                "The AI service is not configured. Please contact support.",
+            )
+
         all_context = []
         if file_context:
             all_context.append(f"UPLOADED ATTACHMENT EXCERPTS:\n{file_context[:3000]}")
@@ -443,8 +556,13 @@ Respond ONLY with valid JSON in this exact structure:
         
         context_block = "\n\n".join(all_context) if all_context else "Standard NCERT & Exam Curriculum Knowledge"
 
+        subject_context = (
+            "the appropriate academic subject (infer it from the question and attachment)"
+            if subject in {"General", "Auto-Detect"}
+            else subject
+        )
         prompt = f"""You are an elite tutor for competitive exams (JEE, NEET, CBSE).
-A student has a doubt in {subject} ({chapter}).
+A student has a doubt in {subject_context} ({chapter}).
 Provide a clear, student-friendly, step-by-step explanation.
 
 CONTEXT:
@@ -484,58 +602,68 @@ Respond ONLY with valid JSON in this exact structure:
   "confidence": 0.95
 }}
 """
-        if self._client is not None:
-            contents: List[Any] = [prompt]
-            if file_bytes and file_mime_type:
-                try:
-                    from google.genai import types
-                    contents.append(types.Part.from_bytes(data=file_bytes, mime_type=file_mime_type))
-                except Exception as part_err:
-                    print(f"[GeminiService] Part.from_bytes notice: {part_err}")
+        contents: List[Any] = [prompt]
+        if file_bytes and file_mime_type:
+            try:
+                from google.genai import types
+                contents.append(types.Part.from_bytes(data=file_bytes, mime_type=file_mime_type))
+            except Exception as error:
+                logger.warning("Failed to prepare doubt attachment (%s)", type(error).__name__)
+                raise GeminiServiceError(
+                    400,
+                    "INVALID_ATTACHMENT",
+                    "The attached file could not be prepared. Please choose another file.",
+                ) from error
 
-            for model_name in self._get_models_to_try():
-                try:
-                    response = self._client.models.generate_content(
-                        model=model_name,
-                        contents=contents,
-                    )
-                    output_text = response.text if hasattr(response, "text") else str(response)
-                    if output_text and len(output_text.strip()) > 0:
-                        parsed = self._extract_json(output_text)
-                        if parsed and "answer" in parsed:
-                            raw_answer = str(parsed.get("answer", ""))
-                            return {
-                                "answer": self.clean_symbol_formatting(raw_answer),
-                                "key_takeaways": [self.clean_symbol_formatting(t) for t in parsed.get("key_takeaways", []) if t],
-                                "suggested_followups": [self.clean_symbol_formatting(f) for f in parsed.get("suggested_followups", []) if f],
-                                "confidence": float(parsed.get("confidence", 0.95))
-                            }
-                        
-                        # Resilient parsing: If output text is not JSON, clean the full text!
-                        clean_text = self.clean_symbol_formatting(output_text)
-                        takeaways = [
-                            line.strip(" *-#\t") 
-                            for line in clean_text.splitlines() 
-                            if line.strip().startswith(("-", "1.", "2.", "3.", "•")) and len(line.strip(" *-#\t")) > 10
-                        ][:4]
+        try:
+            response = self._generate_doubt_content(contents)
+        except GeminiServiceError:
+            raise
 
-                        return {
-                            "answer": clean_text,
-                            "key_takeaways": takeaways or [
-                                "Understand the governing physical and mathematical principles.",
-                                "Keep track of standard definitions, signs, and units.",
-                                "Verify edge cases and boundary constraints."
-                            ],
-                            "suggested_followups": [
-                                "Would you like a step-by-step calculation check on this?",
-                                "Should we generate a targeted practice question for this concept?"
-                            ],
-                            "confidence": 0.95
-                        }
-                except Exception as e:
-                    print(f"[GeminiService] Doubt solver error with model {model_name}: {e}")
+        output_text = getattr(response, "text", None)
+        if not isinstance(output_text, str) or not output_text.strip():
+            logger.warning(
+                "Gemini doubt response invalid model=%s category=empty_response",
+                self.model,
+            )
+            raise GeminiServiceError(
+                502,
+                "AI_PROVIDER_INVALID_RESPONSE",
+                "The AI service returned an invalid response. Please try again.",
+            )
 
-        return self._generate_fallback_doubt_solution(query, subject, chapter, context_chunks)
+        parsed = self._extract_json(output_text)
+        if isinstance(parsed, dict) and isinstance(parsed.get("answer"), str) and parsed["answer"].strip():
+            try:
+                confidence = float(parsed.get("confidence", 0.95))
+            except (TypeError, ValueError):
+                confidence = 0.95
+            takeaways = parsed.get("key_takeaways")
+            followups = parsed.get("suggested_followups")
+            return {
+                "answer": self.clean_symbol_formatting(parsed["answer"]),
+                "key_takeaways": [
+                    self.clean_symbol_formatting(item)
+                    for item in (takeaways if isinstance(takeaways, list) else [])
+                    if isinstance(item, str) and item.strip()
+                ],
+                "suggested_followups": [
+                    self.clean_symbol_formatting(item)
+                    for item in (followups if isinstance(followups, list) else [])
+                    if isinstance(item, str) and item.strip()
+                ],
+                "confidence": min(1.0, max(0.0, confidence)),
+            }
+
+        answer = self.clean_symbol_formatting(output_text)
+        if not answer:
+            raise GeminiServiceError(502, "AI_PROVIDER_INVALID_RESPONSE", "The AI service returned an empty answer. Please try again.")
+        return {
+            "answer": answer,
+            "key_takeaways": [],
+            "suggested_followups": [],
+            "confidence": 0.85,
+        }
 
     def clean_symbol_formatting(self, text: str) -> str:
         """Sanitizes text by eliminating asterisks, raw hashtags, and symbol clutter."""
@@ -556,47 +684,3 @@ Respond ONLY with valid JSON in this exact structure:
         # 7. Normalize multiple newlines
         cleaned = re.sub(r'\n{3,}', '\n\n', cleaned)
         return cleaned.strip()
-
-    def _generate_fallback_doubt_solution(
-        self,
-        query: str,
-        subject: str,
-        chapter: str,
-        context_chunks: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
-        """Provides an authoritative curriculum-based response with clean formatting."""
-        clean_q = query.strip()
-        context_hint = ""
-        if context_chunks and len(context_chunks) > 0:
-            context_hint = f"\n\nReferenced Study Material:\n{context_chunks[0][:200]}..."
-
-        answer = (
-            f"CONCEPT OVERVIEW: {subject} — {chapter}\n\n"
-            f"Your Query: \"{clean_q}\"\n\n"
-            f"1. CORE PRINCIPLE\n"
-            f"In {chapter}, standard syllabus principles establish that understanding fundamental definitions and boundary conditions is paramount. "
-            f"When approaching problems of this type, always write out known parameters and verify units first.\n\n"
-            f"2. STEP-BY-STEP REASONING\n"
-            f"Step 1: Identify the primary governing law or formula applicable to {subject}.\n"
-            f"Step 2: Check for limiting cases (such as initial conditions, extreme values, or conservation laws).\n"
-            f"Step 3: Substitute the given quantities and simplify systematically to prevent sign or unit errors.\n\n"
-            f"3. EXAM SUCCESS TIP\n"
-            f"For NEET and JEE, distractors often test sign conventions or forgotten denominator terms. Always verify the physical dimension of your final result."
-            f"{context_hint}"
-        )
-
-        return {
-            "answer": self.clean_symbol_formatting(answer),
-            "key_takeaways": [
-                f"Verify basic governing formulas for {chapter}.",
-                "Keep dimensional consistency and SI units uniform throughout.",
-                "Review common pitfalls and sign conventions before finalizing."
-            ],
-            "suggested_followups": [
-                f"What happens if boundary parameters approach zero in {chapter}?",
-                f"How does this principle apply to multi-step numerical problems in {subject}?",
-                f"Can you explain the difference between ideal and real-world conditions for this topic?"
-            ],
-            "confidence": 0.88
-        }
-

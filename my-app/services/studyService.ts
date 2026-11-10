@@ -134,7 +134,7 @@ export const studyService = {
       file_content: payload.fileContent || null,
       file_name: payload.fileName || null,
       file_type: payload.fileType || null,
-    });
+    }, { timeout: 120000 });
     return res.data;
   },
 
@@ -249,4 +249,3 @@ export const studyService = {
     return this.submitProblemReport(payload);
   },
 };
-
