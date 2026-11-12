@@ -9,13 +9,21 @@ app = FastAPI(
     description="Python FastAPI RAG Microservice utilizing ChromaDB and Gemini API for Study Insights."
 )
 
-# CORS Middleware
+# CORS: allow only the Node backend origin.
+# Service-to-service calls do not originate from a browser, so CORS does not
+# protect them (the x-service-token header does). However, restricting origins
+# still prevents browsers from directly hitting the RAG service.
+# BACKEND_ORIGIN is set via Render environment; falls back to empty list (deny all browser origins).
+import os
+_backend_origin = os.getenv("BACKEND_ORIGIN", "").strip()
+_allowed_origins = [_backend_origin] if _backend_origin else []
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["POST", "GET"],
+    allow_headers=["Content-Type", "x-service-token"],
 )
 
 # Health endpoint

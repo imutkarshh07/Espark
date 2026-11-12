@@ -2,6 +2,7 @@ import base64
 import binascii
 import logging
 from fastapi import APIRouter, HTTPException, Depends
+from app.api.dependencies import verify_service_token
 from app.api.schemas import (
     ProcessDocumentRequest,
     ProcessDocumentResponse,
@@ -21,7 +22,7 @@ from app.rag.pipeline import RAGPipeline
 from app.services.mistake_analyzer import MistakeAnalyzer
 from app.services.gemini_service import GeminiService, GeminiServiceError
 
-api_router = APIRouter(prefix="/rag", tags=["RAG Microservice"])
+api_router = APIRouter(prefix="/rag", tags=["RAG Microservice"], dependencies=[Depends(verify_service_token)])
 logger = logging.getLogger(__name__)
 
 # Shared pipeline and analyzer singletons

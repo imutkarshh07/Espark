@@ -19,6 +19,14 @@ try:
         GEMINI_API_KEY: str = ""
         GEMINI_MODEL: str = "gemini-3.8-flash"
 
+        # Service-to-service authentication
+        # Shared secret between Node backend and this Python service.
+        # Must be set in Render environment; never committed to source control.
+        RAG_SERVICE_TOKEN: str = ""
+
+        # Allowed backend origin for CORS (set to https://espark-backend.onrender.com)
+        BACKEND_ORIGIN: str = ""
+
         # Supabase
         SUPABASE_URL: str = ""
         SUPABASE_SERVICE_ROLE_KEY: str = ""
@@ -60,5 +68,8 @@ except ImportError:
 
         # Embedding Model
         EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
+
+        # Service-to-service authentication
+        RAG_SERVICE_TOKEN: str = os.getenv("RAG_SERVICE_TOKEN", "")
 
     settings = FallbackSettings()

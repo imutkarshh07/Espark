@@ -9,6 +9,11 @@ class RAGService {
       timeout: 60000,
       headers: {
         'Content-Type': 'application/json',
+        // Service-to-service authentication.
+        // The Python RAG service rejects any request missing this header.
+        // This value comes from the RAG_SERVICE_TOKEN environment variable
+        // and is never sent to mobile or web clients.
+        ...(config.ragServiceToken ? { 'x-service-token': config.ragServiceToken } : {}),
       },
     });
   }

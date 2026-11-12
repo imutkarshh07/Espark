@@ -1,6 +1,7 @@
 services:
   # ----------------------------------------------------------------------------
   # 1. Python FastAPI RAG Microservice (Gemini AI + pgvector)
+  #    Exposed publicly but protected by x-service-token on all /rag/* endpoints.
   # ----------------------------------------------------------------------------
   - type: web
     name: espark-rag-server
@@ -11,18 +12,25 @@ services:
     plan: free
     autoDeploy: true
     envVars:
-      - key: PORT
-        value: 10000
       - key: ENVIRONMENT
         value: production
+      # ── Secrets: set manually in Render dashboard → Environment ─────────────
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-3.8-flash
+        sync: false                 # set to: gemini-3.8-flash (or whichever model)
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
+      # ── Service-to-service auth ──────────────────────────────────────────────
+      # Generate with: openssl rand -hex 32
+      # Must match RAG_SERVICE_TOKEN in espark-backend.
+      - key: RAG_SERVICE_TOKEN
+        sync: false
+      # ── CORS: restrict browser origins to the Node backend only ─────────────
+      - key: BACKEND_ORIGIN
+        value: https://espark-backend.onrender.com
 
   # ----------------------------------------------------------------------------
   # 2. Node.js Express Backend API
@@ -38,10 +46,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: RAG_SERVER_URL
         value: https://espark-rag-server.onrender.com
+      # ── Secrets: set manually in Render dashboard → Environment ─────────────
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_PUBLISHABLE_KEY
@@ -50,6 +57,14 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      # ── Service-to-service auth ──────────────────────────────────────────────
+      # Same value as RAG_SERVICE_TOKEN in espark-rag-server.
+      # Node sends this as x-service-token on every request to Python.
+      - key: RAG_SERVICE_TOKEN
+        sync: false
+      # ── CORS for browser clients ─────────────────────────────────────────────
+      # Comma-separated list of allowed browser origins.
+      # Backend already parses comma-separated values correctly (app.js line 18).
       - key: CORS_ORIGIN
         sync: false
       - key: FRONTEND_URL
